@@ -29,6 +29,7 @@ public class MainUI extends UI {
 		//Create and register the views:
 		navigator.addView("LoginView", new LoginView(navigator, userDAO));
 		navigator.addView("AllEmployeesView", new AllEmployeesView(navigator, userDAO));
+		navigator.addView("SignUpView", new SignUpView(navigator, userDAO));
 		navigator.navigateTo("LoginView");
 		
 	}

@@ -2,6 +2,7 @@ package com.example.restaurantDBMS;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.ui.Alignment;
@@ -9,13 +10,17 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
- * Frame that displays a grid of all the employees and their information
+ * The view that is initially displayed - will ask the user to sign in with their username/password
+ * Also contains a link to the sign-up view
  * @author alexliu
  *
  */
@@ -24,57 +29,81 @@ public class LoginView extends VerticalLayout implements View{
 	@Autowired
 	private UserDAO userDAO;
 
-	// Component declarations
 	private Navigator navigator;
-	private TextField usernameField;
-	private TextField passwordField;
+	//Layouts
+	private VerticalLayout layout; //main layout 
+	private FormLayout form; //layout that ask user to input username, password
 
 	public LoginView(Navigator navigate, UserDAO uDAO) {
+		//initialize globals
 		userDAO = uDAO;
 		navigator = navigate;
-		//set up layout
+		layout = new VerticalLayout();
+		form = new FormLayout();
+		
+		//set up 
 		setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-		
-		//initialize components
-		usernameField = new TextField();
-		passwordField = new TextField();
-		
+	    initializeLayouts();
+	    initializePanel();
+	}
+	
+	private void initializeLayouts() {
 		//add header
-		Label header = new Label("Login To Your Account");
-	    header.addStyleName(ValoTheme.LABEL_H1);
-	    addComponentAsFirst(header);
-	    
-	    //add username label and field
-	    HorizontalLayout usernameLayout = new HorizontalLayout();
-        usernameLayout.setWidth("30%");
-        usernameLayout.addComponent(new Label("Username"));
-        usernameLayout.addComponentsAndExpand(usernameField);
-        addComponent(usernameLayout);
+		layout.addComponent(new Label("Login to Your Account"));
+		
+		//form setup
+		form.setMargin(true);
+		
+		//add username field
+        TextField usernameField = new TextField("Username");
+        usernameField.setIcon(VaadinIcons.USER);
+        form.addComponent(usernameField);
         
         //add password label and field
-	    HorizontalLayout passwordLayout = new HorizontalLayout();
-        passwordLayout.setWidth("30%");
-        passwordLayout.addComponent(new Label("Password"));
-        passwordLayout.addComponentsAndExpand(passwordField);
-	    addComponent(passwordLayout);
-	    
-	    //add login button
-		Button loginButton = new Button("Login", new Button.ClickListener() {
+        TextField passwordField = new TextField("Password");
+        passwordField.setIcon(VaadinIcons.KEY);
+        form.addComponent(passwordField);
+        
+        //add button to login
+        	Button loginButton = new Button("Login", new Button.ClickListener() {
+
+        		@Override
+        		public void buttonClick(ClickEvent event) {
+        			String username = usernameField.getValue().trim();
+        			String password = passwordField.getValue().trim();
+        			//Search if there are any users with the given username and password
+        			User user = userDAO.searchUsers(username);
+        			if (user == null || !user.getPassword().equals(password))
+        				Notification.show("Incorrect username/password");
+        			else
+        				navigator.navigateTo("AllEmployeesView");
+        		}
+        	});
+        loginButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        form.addComponent(loginButton);
+        
+        layout.addComponent(form); //done with adding components to the form
+        
+        //Add a button to switch the view to the sign-up page
+        Button registerButton = new Button("Don't have an account? Sign up here!", new Button.ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				String username = usernameField.getValue().trim();
-				String password = passwordField.getValue().trim();
-				//Search if there are any users with the given username and password
-				User user = userDAO.searchUsers(username);
-				if (user == null || !user.getPassword().equals(password))
-					Notification.show("Incorrect username/password");
-				else
-					navigator.navigateTo("AllEmployeesView");
+				navigator.navigateTo("SignUpView");
 			}
 		});
-	    loginButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
-	    addComponent(loginButton);
+        registerButton.setStyleName(ValoTheme.BUTTON_LINK);
+        
+        layout.addComponent(registerButton);
+        layout.setComponentAlignment(registerButton, Alignment.BOTTOM_CENTER);
+	}
+	
+	//Creates the panel that will be displayed 
+	private void initializePanel() {
+		Panel signinPanel = new Panel(); 
+		signinPanel.setWidth("30%");
+		signinPanel.setContent(layout); 
+		addComponent(signinPanel);
 	}
 
 }
