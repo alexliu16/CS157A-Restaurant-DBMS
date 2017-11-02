@@ -16,7 +16,7 @@ import java.util.List;
 public class MainUI extends UI {
 
 	@Autowired
-	private UserDAO userDAO;
+	private RestaurantDAO restaurantDAO;
 	
 	private Navigator navigator;
 	//private VerticalLayout layout;
@@ -27,9 +27,12 @@ public class MainUI extends UI {
 		navigator = new Navigator(this, this);
 		
 		//Create and register the views:
-		navigator.addView("LoginView", new LoginView(navigator, userDAO));
-		navigator.addView("AllEmployeesView", new AllEmployeesView(navigator, userDAO));
-		navigator.addView("SignUpView", new SignUpView(navigator, userDAO));
+		navigator.addView("LoginView", new LoginView(navigator, restaurantDAO));
+		navigator.addView("AllEmployeesView", new AllEmployeesView(navigator, restaurantDAO));
+		navigator.addView("SignUpView", new SignUpView(navigator, restaurantDAO));
+		navigator.addView("CustomerMainView", new CustomerMainView(navigator, restaurantDAO));
+		navigator.addView("EmployeeMainView", new EmployeeMainView(navigator, restaurantDAO));
+		navigator.addView("RestaurantOwnerMainView", new RestaurantOwnerMainView(navigator, restaurantDAO));
 		navigator.navigateTo("LoginView");
 		
 	}

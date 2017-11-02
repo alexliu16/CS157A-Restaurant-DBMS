@@ -27,16 +27,16 @@ import com.vaadin.ui.themes.ValoTheme;
 public class LoginView extends VerticalLayout implements View{
 	
 	@Autowired
-	private UserDAO userDAO;
+	private RestaurantDAO restaurantDAO;
 
 	private Navigator navigator;
 	//Layouts
 	private VerticalLayout layout; //main layout 
 	private FormLayout form; //layout that ask user to input username, password
 
-	public LoginView(Navigator navigate, UserDAO uDAO) {
+	public LoginView(Navigator navigate, RestaurantDAO rDAO) {
 		//initialize globals
-		userDAO = uDAO;
+		restaurantDAO = rDAO;
 		navigator = navigate;
 		layout = new VerticalLayout();
 		form = new FormLayout();
@@ -49,6 +49,7 @@ public class LoginView extends VerticalLayout implements View{
 	
 	private void initializeLayouts() {
 		//add header
+		layout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 		layout.addComponent(new Label("Login to Your Account"));
 		
 		//form setup
@@ -71,12 +72,11 @@ public class LoginView extends VerticalLayout implements View{
         		public void buttonClick(ClickEvent event) {
         			String username = usernameField.getValue().trim();
         			String password = passwordField.getValue().trim();
-        			//Search if there are any users with the given username and password
-        			User user = userDAO.searchUsers(username);
-        			if (user == null || !user.getPassword().equals(password))
-        				Notification.show("Incorrect username/password");
-        			else
-        				navigator.navigateTo("AllEmployeesView");
+        			//Determine the user based on username and password 
+        			User user = null;
+        			if ((user = restaurantDAO.searchEmployee(username)) != null && user.getPassword().equals(password))
+        				navigator.navigateTo("EmployeeMainView");
+        			
         		}
         	});
         loginButton.addStyleName(ValoTheme.BUTTON_PRIMARY);

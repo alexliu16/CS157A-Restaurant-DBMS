@@ -19,15 +19,15 @@ import com.vaadin.ui.themes.ValoTheme;
 public class AllEmployeesView extends VerticalLayout implements View{
 	
 	@Autowired
-	private UserDAO userDAO;
+	private RestaurantDAO restaurantDAO;
 	
 	private Grid<User> grid;
 	private Navigator navigator;
 
-	public AllEmployeesView(Navigator navigate, UserDAO uDAO) {
+	public AllEmployeesView(Navigator navigate, RestaurantDAO rDAO) {
 		//initialize globals
 		grid = new Grid<>(User.class);
-		userDAO = uDAO;
+		restaurantDAO = rDAO;
 		navigator = navigate;
 		
 		//set up layout
@@ -40,7 +40,7 @@ public class AllEmployeesView extends VerticalLayout implements View{
 		
 		//set up grid
 		grid.setColumns("username", "password", "id", "name", "birthday", "address", "phoneNumber");
-		grid.setItems(userDAO.getAllUsers());
+		grid.setItems(restaurantDAO.getAllUsers());
 		grid.getColumn("username").setHidden(true);
 		grid.getColumn("password").setHidden(true);
 		grid.getColumn("id").setHidden(true);
