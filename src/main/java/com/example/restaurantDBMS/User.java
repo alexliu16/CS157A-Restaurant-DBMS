@@ -7,16 +7,26 @@ public class User {
 	private int id;
 	private String name,
 	birthday,
-	address,
+	email,
 	phoneNumber;
+	
+	public User(String user, String pass, String fullName, String birthdate, String em, String phone){
+		username = user;
+		password = pass;
+		id = -1;
+		name = fullName;
+		birthday = birthdate;
+		email = em;
+		phoneNumber = phone;
+	}
 
-	public User(String user, String pass, int idNo, String fullName, String birthdate, String addr, String phone){
+	public User(String user, String pass, int idNo, String fullName, String birthdate, String em, String phone){
 		username = user;
 		password = pass;
 		id = idNo;
 		name = fullName;
 		birthday = birthdate;
-		address = addr;
+		email = em;
 		phoneNumber = phone;
 	}
 
@@ -60,12 +70,12 @@ public class User {
 		this.birthday = birthday;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setEmail(String em) {
+		email = em;
 	}
 
 	public String getPhoneNumber() {
@@ -79,6 +89,6 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + ", id=" + id + ", name=" + name + ", birthday="
-				+ birthday + ", address=" + address + ", phoneNumber=" + phoneNumber + "]";
+				+ birthday + ", email=" + email + ", phoneNumber=" + phoneNumber + "]";
 	}
 }

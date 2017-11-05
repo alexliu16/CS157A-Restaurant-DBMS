@@ -1,20 +1,30 @@
 package com.example.restaurantDBMS;
 
 import java.time.LocalDate;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.vaadin.data.Binder;
+import com.vaadin.data.validator.EmailValidator;
+import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
+import com.vaadin.server.Sizeable;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -29,98 +39,144 @@ public class SignUpView extends VerticalLayout implements View {
 	private RestaurantDAO restaurantDAO;
 	
 	private Navigator navigator;
-	private FormLayout form;
+	private VerticalLayout layout;
+	private Binder<Customer> binder;
+	private Customer customer;
 
 	public SignUpView(Navigator navigate, RestaurantDAO rDAO) {
 		//initialize globals
 		restaurantDAO = rDAO;
 		navigator = navigate;
-		form = new FormLayout();
-		form.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+		layout = new VerticalLayout();
+		binder = new Binder<Customer>();
+		customer = new Customer("", "", "","","", "");
 		
 		//set up layout
 	  	setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 		
-		//add header
-		Label header = new Label("Create a New Customer Account"); 
-	    header.addStyleName(ValoTheme.LABEL_H1);
-	    addComponent(header);
-	   
-	    setupTextFields();
+	    setupForm();
 	    setupButtons();
-	    
-	    //add login panel
+	    setupPanel();
+	}
+	
+	private void setupPanel() {
 	    Panel signupPanel = new Panel();
 	    signupPanel.setWidth("30%");
-	    form.setMargin(true);
-	    signupPanel.setContent(form);
-	    signupPanel.addStyleName("test");
+	    signupPanel.setContent(layout);
 	    addComponent(signupPanel);
-	  
 	}
 
     //add fields that user has to fill in:
-	private void setupTextFields() {
-		//name field
-	    TextField nameField = new TextField("Name");
-	    nameField.setIcon(VaadinIcons.CALENDAR_USER);
-	    nameField.setRequiredIndicatorVisible(true);
-	    form.addComponent(nameField);
-	    
-	    //username field
-	    TextField usernameField = new TextField("Username");
-	    usernameField.setIcon(VaadinIcons.USER);
-	    usernameField.setRequiredIndicatorVisible(true);
-	    form.addComponent(usernameField);
-	    
-	    //password field
-	    TextField passwordField = new TextField("Password");
-	    passwordField.setIcon(VaadinIcons.KEY);
-	    passwordField.setRequiredIndicatorVisible(true);
-	    form.addComponent(passwordField);
-	    
-	    //address field
-	    TextField addressField = new TextField("Address");
-	    addressField.setIcon(VaadinIcons.ROAD);
-	    form.addComponent(addressField);
-	    
-	    //birthday field
-	    DateField birthdayField = new DateField("Birthday");
-	    birthdayField.setValue(LocalDate.now());
-	    birthdayField.setIcon(VaadinIcons.CALENDAR);
-	    form.addComponent(birthdayField);
-	    
-	    //email field
-	    TextField emailField = new TextField("Email Address");
-	    emailField.setIcon(VaadinIcons.MAILBOX);
-	    form.addComponent(emailField);
-	    
+	private void setupForm() {
+		// add header
+		Label header = new Label("Sign Up");
+		header.addStyleName(ValoTheme.LABEL_BOLD);
+		header.addStyleName(ValoTheme.LABEL_LARGE);
+		layout.addComponent(header);
+		layout.setComponentAlignment(header, Alignment.MIDDLE_CENTER);
+
+		// add input fields for first and last name
+		Label nameLabel = new Label("Name");
+		nameLabel.setStyleName(ValoTheme.LABEL_BOLD);
+		layout.addComponent(nameLabel);
+		
+		TextField nameField = new TextField();
+		nameField.setPlaceholder("Full name");
+		nameField.setWidth("100%");
+		layout.addComponent(nameField);
+		
+		//add username and password fields
+		Label usernameLabel = new Label("Choose your username");
+		usernameLabel.setStyleName(ValoTheme.LABEL_BOLD);
+		layout.addComponent(usernameLabel);
+		
+		TextField usernameField = new TextField();
+		usernameField.setWidth("100%");
+		layout.addComponent(usernameField);
+		
+		Label passwordLabel = new Label("Create a password");
+		passwordLabel.setStyleName(ValoTheme.LABEL_BOLD);
+		layout.addComponent(passwordLabel);
+		
+		TextField passwordField = new TextField();
+		passwordField.setWidth("100%");
+		layout.addComponent(passwordField);
+		
+		//add birthday input
+		Label birthdayLabel = new Label("Birthday");
+		birthdayLabel.setStyleName(ValoTheme.LABEL_BOLD);
+		layout.addComponent(birthdayLabel);	    
+		
+		TextField birthdayField = new TextField();
+		birthdayField.setPlaceholder("MM-DD-YYYY");
+		birthdayField.setWidth("50%");
+		
+		layout.addComponent(birthdayField);
+		
+		//add email input
+		Label emailLabel = new Label("Email address");
+		emailLabel.setStyleName(ValoTheme.LABEL_BOLD);
+		layout.addComponent(emailLabel);	 
+		
+		TextField emailField = new TextField();
+		emailField.setWidth("100%");
+		layout.addComponent(emailField);
+		
+		//add phone input
+		Label phoneLabel = new Label("Mobile phone");
+		phoneLabel.setStyleName(ValoTheme.LABEL_BOLD);
+		layout.addComponent(phoneLabel);	 
+		
+		TextField phoneField = new TextField();
+		phoneField.setPlaceholder("(DDD)-DDD-DDDD");
+		phoneField.setWidth("100%");
+		layout.addComponent(phoneField);	 
+		
+		//bind fields
+		binder.forField(nameField).withValidator(name -> name != null && !name.isEmpty(), "This field cannot be left blank").bind(Customer::getName, Customer::setName);
+		binder.forField(usernameField).withValidator(user -> user != null && !user.isEmpty(), "Please enter a username").withValidator(user -> restaurantDAO.searchUser(user) == null, "Username is already taken").bind(Customer::getUsername, Customer::setUsername);
+		binder.forField(passwordField).withValidator(pass -> pass !=null && !pass.isEmpty(), "Please enter a password").bind(Customer::getPassword, Customer::setPassword);
+		binder.forField(birthdayField).withValidator(birthday -> birthday.toString().matches("\\d{2}-\\d{2}-\\d{4}"), "Please enter a valid date").bind(Customer::getBirthday, Customer::setBirthday);
+		binder.forField(emailField).withValidator(new EmailValidator("Please enter a valid email address")).bind(Customer::getEmail, Customer::setEmail);
+		binder.forField(phoneField).withValidator(phone -> phone.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}"), "Phone number is of incorrect format").bind(Customer::getPhoneNumber, Customer::setPhoneNumber);
+		
+		binder.setBean(customer);
 	}
 	
 	//add buttons: cancel button and sign-up button
 	private void setupButtons() {
-		HorizontalLayout layout = new HorizontalLayout(); //layout to hold buttons
-		 //cancel button - changes view to LoginView
-		Button cancelButton = new Button("Cancel", new Button.ClickListener() {
+		
+		Button nextButton = new Button("Continue", new Button.ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				if(binder.validate().isOk()) { //All fields are filled in and formatted correctly
+					binder.setBean(customer);
+					customer.setId(restaurantDAO.getMaxID() + 1);
+					navigator.navigateTo("BillingInformationView");
+					((BillingInformationView) navigator.getCurrentView()).setCustomer(customer);
+				}	
+				else
+					Notification.show("Not all fields are filled out correctly");
+				
+			}
+			
+		});
+		nextButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+		nextButton.setWidth("100%");
+		layout.addComponent(nextButton);
+		
+		//cancel button - changes view to LoginView
+		Button cancelButton = new Button("Already have an account? Sign in", new Button.ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
 				navigator.navigateTo("LoginView");
 			}
 		});
-		
-		Button signUpButton = new Button("Sign Up", new Button.ClickListener() {
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				//TODO: Add button functionality
-			}
-		});
-		signUpButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+		cancelButton.setStyleName(ValoTheme.BUTTON_LINK);
 		layout.addComponent(cancelButton);
-		layout.addComponent(signUpButton);
-		//addComponent(layout);
-		
-		form.addComponent(signUpButton);
+	    layout.setComponentAlignment(cancelButton, Alignment.MIDDLE_CENTER);
 	}
+
 }

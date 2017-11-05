@@ -39,7 +39,7 @@ public class AllEmployeesView extends VerticalLayout implements View{
 	    addComponentAsFirst(header);
 		
 		//set up grid
-		grid.setColumns("username", "password", "id", "name", "birthday", "address", "phoneNumber");
+		grid.setColumns("username", "password", "id", "name", "birthday", "email", "phoneNumber");
 		grid.setItems(restaurantDAO.getAllUsers());
 		grid.getColumn("username").setHidden(true);
 		grid.getColumn("password").setHidden(true);

@@ -11,6 +11,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
@@ -50,18 +51,22 @@ public class LoginView extends VerticalLayout implements View{
 	private void initializeLayouts() {
 		//add header
 		layout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-		layout.addComponent(new Label("Login to Your Account"));
+		Label header = new Label("Login to your Account");
+		header.setStyleName(ValoTheme.LABEL_BOLD);
+		header.addStyleName(ValoTheme.LABEL_LARGE);
+		layout.addComponent(header);
 		
 		//form setup
 		form.setMargin(true);
 		
 		//add username field
         TextField usernameField = new TextField("Username");
+      
         usernameField.setIcon(VaadinIcons.USER);
         form.addComponent(usernameField);
         
         //add password label and field
-        TextField passwordField = new TextField("Password");
+        PasswordField passwordField = new PasswordField("Password");
         passwordField.setIcon(VaadinIcons.KEY);
         form.addComponent(passwordField);
         
@@ -74,9 +79,14 @@ public class LoginView extends VerticalLayout implements View{
         			String password = passwordField.getValue().trim();
         			//Determine the user based on username and password 
         			User user = null;
-        			if ((user = restaurantDAO.searchEmployee(username)) != null && user.getPassword().equals(password))
+        			if((user = restaurantDAO.searchRestaurantOwner(username)) != null && user.getPassword().equals(password)) //user is restaurant owner
+        				navigator.navigateTo("RestaurantOwnerMainView");
+        			else if ((user = restaurantDAO.searchEmployee(username)) != null && user.getPassword().equals(password)) //user is regular employee
         				navigator.navigateTo("EmployeeMainView");
-        			
+        			else if((user = restaurantDAO.searchCustomer(username)) != null && user.getPassword().equals(password)) //user is customer
+        				navigator.navigateTo("CustomerMainView");
+        			else //no user with given username/password
+        				Notification.show("Invalid username/pasword");
         		}
         	});
         loginButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
@@ -85,7 +95,7 @@ public class LoginView extends VerticalLayout implements View{
         layout.addComponent(form); //done with adding components to the form
         
         //Add a button to switch the view to the sign-up page
-        Button registerButton = new Button("Don't have an account? Sign up here!", new Button.ClickListener() {
+        Button registerButton = new Button("Don't have an account? Sign up here", new Button.ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
