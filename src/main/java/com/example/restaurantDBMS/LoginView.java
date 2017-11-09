@@ -79,12 +79,18 @@ public class LoginView extends VerticalLayout implements View{
         			String password = passwordField.getValue().trim();
         			//Determine the user based on username and password 
         			User user = null;
-        			if((user = restaurantDAO.searchRestaurantOwner(username)) != null && user.getPassword().equals(password)) //user is restaurant owner
+        			if((user = restaurantDAO.searchRestaurantOwner(username)) != null && user.getPassword().equals(password)){ //user is restaurant owner
         				navigator.navigateTo("RestaurantOwnerMainView");
-        			else if ((user = restaurantDAO.searchEmployee(username)) != null && user.getPassword().equals(password)) //user is regular employee
+        				((RestaurantOwnerMainView) navigator.getCurrentView()).setEmployee((Employee)user);
+        			}	
+        			else if ((user = restaurantDAO.searchEmployee(username)) != null && user.getPassword().equals(password)){ //user is regular employee
         				navigator.navigateTo("EmployeeMainView");
-        			else if((user = restaurantDAO.searchCustomer(username)) != null && user.getPassword().equals(password)) //user is customer
+        				((EmployeeMainView) navigator.getCurrentView()).setEmployee((Employee)user);
+        			}	
+        			else if((user = restaurantDAO.searchCustomer(username)) != null && user.getPassword().equals(password)) { //user is customer
         				navigator.navigateTo("CustomerMainView");
+        				((CustomerMainView) navigator.getCurrentView()).setCustomer((Customer)user);
+        			}	
         			else //no user with given username/password
         				Notification.show("Invalid username/pasword");
         		}

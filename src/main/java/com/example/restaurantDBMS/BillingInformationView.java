@@ -40,7 +40,6 @@ public class BillingInformationView extends VerticalLayout implements View {
 	  	setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 		
 	    setupForm();
-	    setupButtons();
 	    setupPanel();
 	}
 	
@@ -116,10 +115,6 @@ public class BillingInformationView extends VerticalLayout implements View {
 		cancelButton.setStyleName(ValoTheme.BUTTON_LINK);
 		layout.addComponent(cancelButton);
 	    layout.setComponentAlignment(cancelButton, Alignment.MIDDLE_CENTER);
-	}
-	
-	private void setupButtons() {
-
 	}
 	
 	private void setupPanel() {
