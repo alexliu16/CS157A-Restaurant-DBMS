@@ -2,19 +2,20 @@ package com.example.restaurantDBMS;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.example.employeeViews.*;
+import com.example.customerViews.*;
+import com.example.restaurantOwnerViews.*;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -82,6 +83,7 @@ public class LoginView extends VerticalLayout implements View{
         			if((user = restaurantDAO.searchRestaurantOwner(username)) != null && user.getPassword().equals(password)){ //user is restaurant owner
         				navigator.navigateTo("RestaurantOwnerMainView");
         				((RestaurantOwnerMainView) navigator.getCurrentView()).setEmployee((Employee)user);
+        				((RestaurantOwnerMainView) navigator.getCurrentView()).displayInitialContent();
         			}	
         			else if ((user = restaurantDAO.searchEmployee(username)) != null && user.getPassword().equals(password)){ //user is regular employee
         				navigator.navigateTo("EmployeeMainView");

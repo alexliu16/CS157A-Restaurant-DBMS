@@ -27,7 +27,7 @@ public class RestaurantDAO {
 
 	//Returns a User with the with the given username - null if doesn't exist
 	public User searchUser(String username) {
-		return DataAccessUtils.singleResult(jdbcTemplate.query("select * from Users where username = '" + username + "'", new UserRowMapper()));
+		return DataAccessUtils.singleResult(jdbcTemplate.query("select * from Users WHERE username = '" + username + "'", new UserRowMapper()));
 	}
 	
 	public void addUser(User user) {
@@ -37,23 +37,17 @@ public class RestaurantDAO {
 	
 	//Returns a list of all the employees in the database
 	public List<Employee> getAllEmployees() {
-		return jdbcTemplate.query("SELECT a.username, c.password, c.id, c.name, c.birthday, c.email, c.phoneNumber, b.position, b.salary "
-				+ "FROM Employees a JOIN EmployeeSalaries b on a.position = b.position JOIN Users c on a.username = c.username", new EmployeeRowMapper());  
+		return jdbcTemplate.query("SELECT * FROM Users NATURAL JOIN Employees", new EmployeeRowMapper());  
 	}
 	
 	//Returns an Employee with the with the given username - null if doesn't exist
 	public Employee searchEmployee(String username) {
-		return DataAccessUtils.singleResult(jdbcTemplate.query("SELECT a.username, c.password, c.id, c.name, c.birthday, c.email, c.phoneNumber, b.position, b.salary "
-				+ "FROM Employees a JOIN EmployeeSalaries b on a.position = b.position "
-				+ "JOIN Users c on a.username = c.username WHERE a.username = '" + username + "'", new EmployeeRowMapper()));
+		return DataAccessUtils.singleResult(jdbcTemplate.query("SELECT * FROM Users NATURAL JOIN Employees WHERE username = '" + username + "'", new EmployeeRowMapper()));
 	}
 	
 	//Returns an Employee with the position 'Owner' - null if username doesn't match
 	public Employee searchRestaurantOwner(String username) {
-		return DataAccessUtils.singleResult(jdbcTemplate.query("SELECT a.username, c.password, c.id, c.name, c.birthday, c.email, c.phoneNumber, b.position, b.salary "
-				+ "FROM Employees a JOIN EmployeeSalaries b on a.position = b.position "
-				+ "JOIN Users c on a.username = c.username "
-				+ "WHERE b.position = 'Owner' AND a.username = '" + username + "'", new EmployeeRowMapper()));
+		return DataAccessUtils.singleResult(jdbcTemplate.query("SELECT * FROM Users NATURAL JOIN Employees WHERE position = 'Owner' AND username = '" + username + "'", new EmployeeRowMapper()));
 	}
 	
 	//Returns an Employee with the position 'Owner' - null if username doesn't match
@@ -77,8 +71,46 @@ public class RestaurantDAO {
 			{cust.getCreditCardNumber(), cust.getExpirationDate(), cust.getCvv()});
 	}
 	
+	public void addEmployee(Employee employee) {
+		//update information in users and employees relations
+		jdbcTemplate.update("INSERT INTO Users VALUES (?, ?, ?, ?, ?, ?, ?)", employee.getUsername(),
+				employee.getPassword(), employee.getId(), employee.getName(), employee.getBirthday(),
+				employee.getEmail(), employee.getPhoneNumber());
+		jdbcTemplate.update("INSERT INTO Employees VALUES (?, ?, ?)", employee.getUsername(),
+				employee.getPosition(), employee.getSalary());
+	}
+	
 	public int getMaxID(){
 		return jdbcTemplate.queryForObject("SELECT MAX(id) FROM Users", Integer.class);
+	}
+	
+	//update
+	
+	public void updatePassword(String username, String newPassword) {
+		jdbcTemplate.update("UPDATE Users SET password = ? WHERE username = ?", newPassword, username);
+	}
+	
+	public void updateEmployeeEmailPhone(String username, String email, String phone) {
+		jdbcTemplate.update("UPDATE Users SET email = ?, phoneNumber = ? WHERE username = ?", email, phone, username);
+	}
+	
+	public void updateEmployeePosition(String username, String newPosition){
+		jdbcTemplate.update("UPDATE Employees SET position = ? WHERE username = ? ", newPosition, username);
+	}
+	
+	public void updateEmployeeSalary(String username, int salary){
+		jdbcTemplate.update("UPDATE Employees SET salary = ? WHERE username = ? ", salary, username);
+	}
+	
+	//deletion
+	
+	public void deleteUser(String username){
+		jdbcTemplate.update("DELETE FROM Users WHERE username = ?", username);
+	}
+	
+	public void deleteEmployee(String username){
+		jdbcTemplate.update("DELETE FROM Users WHERE username = ?", username); //delete user info
+		jdbcTemplate.update("DELETE FROM Employees WHERE username = ?", username); //delete employee info
 	}
 	
 	//Inner classes:

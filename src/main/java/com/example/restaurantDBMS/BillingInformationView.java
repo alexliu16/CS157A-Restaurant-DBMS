@@ -2,6 +2,7 @@ package com.example.restaurantDBMS;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.example.customerViews.*;
 import com.vaadin.data.Binder;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.converter.StringToLongConverter;

@@ -1,18 +1,11 @@
 package com.example.restaurantDBMS;
 
-import java.time.LocalDate;
-import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.data.validator.RegexpValidator;
-import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
-import com.vaadin.server.Sizeable;
-import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
@@ -21,11 +14,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
@@ -155,6 +143,7 @@ public class SignUpView extends VerticalLayout implements View {
 					customer.setId(restaurantDAO.getMaxID() + 1);
 					navigator.navigateTo("BillingInformationView");
 					((BillingInformationView) navigator.getCurrentView()).setCustomer(customer);
+					binder.readBean(null);
 				}	
 				else
 					Notification.show("Not all fields are filled out correctly");

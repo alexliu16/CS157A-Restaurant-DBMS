@@ -1,10 +1,11 @@
-package com.example.restaurantDBMS;
+package com.example.employeeViews;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.example.restaurantDBMS.*;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
@@ -23,17 +24,17 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
- * The view that is displayed when a customer first logs in 
+ * The view that is displayed when the restaurant owner first logs in 
  * @author alexliu
  *
  */
-public class CustomerMainView extends HorizontalLayout implements View{
+public class EmployeeMainView extends HorizontalLayout implements View{
 	
 	@Autowired
 	private RestaurantDAO restaurantDAO;
 
 	private Navigator navigator;
-	private Customer customer;
+	private Employee employee;
 	
 	//Layouts
 	private CssLayout contentArea;
@@ -41,11 +42,11 @@ public class CustomerMainView extends HorizontalLayout implements View{
 	
 	private Label nameLabel;
 	
-	public CustomerMainView(Navigator navigate, RestaurantDAO rDAO) {
+	public EmployeeMainView(Navigator navigate, RestaurantDAO rDAO) {
 		//initialize globals
 		restaurantDAO = rDAO;
 		navigator = navigate;
-		customer = null;
+		employee = null;
 		nameLabel = new Label();
 		
 		//Initialize base layout
@@ -88,7 +89,7 @@ public class CustomerMainView extends HorizontalLayout implements View{
 		menuItemsLayout.addComponent(vLayout);
 		
 		//create labels	
-		String[] labelNames = new String[]{"Profile", "Restaurant"};
+		String[] labelNames = new String[]{"Profile", "Orders", "Menu"};
 		List<Label> labels = new ArrayList<Label>();
 		Label label = null;
 		for (String labelName : labelNames) {
@@ -100,7 +101,7 @@ public class CustomerMainView extends HorizontalLayout implements View{
 		}
 		
 		//create buttons
-		String[] buttonNames = new String[]{"Edit Profile", "Update Billing Information", "View Menu", "Place Order", "Logout"};
+		String[] buttonNames = new String[]{"Edit Profile", "View Orders", "View Menu", "Logout"};
 		List<Button> buttons = new ArrayList<Button>();
 		Button button = null;
 		for (String buttonName : buttonNames) {
@@ -112,32 +113,27 @@ public class CustomerMainView extends HorizontalLayout implements View{
 		
 		//add icons and functionality to buttons
 		buttons.get(0).setIcon(VaadinIcons.USER);
-		buttons.get(1).setIcon(VaadinIcons.CREDIT_CARD);
+		buttons.get(1).setIcon(VaadinIcons.TABLE);
 		buttons.get(2).setIcon(VaadinIcons.MENU);
-		buttons.get(3).setIcon(VaadinIcons.PACKAGE);
-		buttons.get(4).setIcon(VaadinIcons.SIGN_OUT);
+		buttons.get(3).setIcon(VaadinIcons.SIGN_OUT);
 		
 		//add labels and buttons
-		menuItemsLayout.addComponent(labels.get(0));
-		menuItemsLayout.addComponent(buttons.get(0));
-		menuItemsLayout.addComponent(buttons.get(1));
-		
-		menuItemsLayout.addComponent(labels.get(1));
-		menuItemsLayout.addComponent(buttons.get(2));
-		menuItemsLayout.addComponent(buttons.get(3));
+		menuItemsLayout.addComponents(labels.get(0), buttons.get(0));
+		menuItemsLayout.addComponents(labels.get(1), buttons.get(1));
+		menuItemsLayout.addComponents(labels.get(2), buttons.get(2));
 		
 		//add logout button at bottom of the page
 		VerticalLayout vLayout2 = new VerticalLayout(); //layout that contains the logout button
 		vLayout2.setMargin(new MarginInfo(true, true, true, false));
-		vLayout2.setHeight("50%");
-		Button signoutButton = buttons.get(4);
+		vLayout2.setHeight("30%");
+		Button signoutButton = buttons.get(3);
 		signoutButton.addClickListener(new Button.ClickListener(){
 
 			@Override
 			public void buttonClick(ClickEvent event) {
 				//return to login page when clicked
 				navigator.navigateTo("LoginView");
-				customer = null;
+				employee = null;
 			}
 		
 		});
@@ -151,9 +147,9 @@ public class CustomerMainView extends HorizontalLayout implements View{
 	}
 	
 	//Set the customer and repaint the label
-	public void setCustomer(Customer cust){
-		customer = cust;
-		nameLabel.setValue(customer.getName());
+	public void setEmployee(Employee emp){
+		employee = emp;
+		nameLabel.setValue(employee.getName());
 		nameLabel.markAsDirty();
 	}
 }
