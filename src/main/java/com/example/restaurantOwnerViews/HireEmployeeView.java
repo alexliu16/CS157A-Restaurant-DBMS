@@ -1,5 +1,7 @@
 package com.example.restaurantOwnerViews;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.restaurantDBMS.*;
@@ -146,7 +148,8 @@ public class HireEmployeeView extends RestaurantOwnerMainView {
 					Notification.show("Success! You have hired a new employee.");
 				}	
 				else
-					Notification.show("Not all fields are filled out correctly");
+					//Notification.show("Not all fields are filled out correctly");
+					Notification.show(Arrays.toString(binder.validate().getValidationErrors().toArray()));
 			}
 			
 		});

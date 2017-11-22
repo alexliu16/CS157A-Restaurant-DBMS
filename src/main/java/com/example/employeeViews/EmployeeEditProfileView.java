@@ -1,6 +1,7 @@
-package com.example.restaurantOwnerViews;
+package com.example.employeeViews;
 
-import com.example.restaurantDBMS.*;
+import com.example.restaurantDBMS.Employee;
+import com.example.restaurantDBMS.RestaurantDAO;
 import com.vaadin.data.Binder;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.navigator.Navigator;
@@ -14,11 +15,11 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class OwnerEditProfileView extends RestaurantOwnerMainView{
+public class EmployeeEditProfileView extends EmployeeMainView{
 	
-	private Binder<Employee> binder;
+private Binder<Employee> binder;
 	
-	public OwnerEditProfileView(Navigator navigate, RestaurantDAO dao){
+	public EmployeeEditProfileView(Navigator navigate, RestaurantDAO dao){
 		super(navigate, dao);
 		binder = new Binder<>();
 		
@@ -77,6 +78,7 @@ public class OwnerEditProfileView extends RestaurantOwnerMainView{
 			@Override
 			public void buttonClick(ClickEvent event) {
 				if(binder.validate().isOk()) { //All fields are filled in and formatted correctly
+					binder.setBean(currentEmployee);
 					getRestaurantDAO().updateEmployeeEmailPhone(currentEmployee.getUsername(), currentEmployee.getEmail(), currentEmployee.getPhoneNumber());
 					Notification.show("You have sucessfully updated your profile.");
 				}	
@@ -96,5 +98,4 @@ public class OwnerEditProfileView extends RestaurantOwnerMainView{
 		contentPanel.setWidth("60%");
 		layout.addComponent(contentPanel);
 	}
-	
 }

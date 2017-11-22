@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.example.employeeViews.EmployeeChangePasswordView;
+import com.example.employeeViews.EmployeeEditProfileView;
 import com.example.restaurantDBMS.*;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
@@ -19,6 +21,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -36,7 +39,7 @@ public class CustomerMainView extends HorizontalLayout implements View{
 	private Customer customer;
 	
 	//Layouts
-	private CssLayout contentArea;
+	private VerticalLayout contentArea;
 	private CssLayout menuArea;
 	
 	private Label nameLabel;
@@ -57,8 +60,9 @@ public class CustomerMainView extends HorizontalLayout implements View{
 		menuArea = new CssLayout();
 		menuArea.setPrimaryStyleName(ValoTheme.MENU_ROOT);
 		
-		contentArea = new CssLayout();
-		contentArea.setSizeFull();
+		contentArea = new VerticalLayout();
+		contentArea.setWidth("100%");
+		contentArea.setHeightUndefined();
 		
 		addComponents(menuArea, contentArea);
 		setExpandRatio(contentArea, 1);
@@ -100,7 +104,7 @@ public class CustomerMainView extends HorizontalLayout implements View{
 		}
 		
 		//create buttons
-		String[] buttonNames = new String[]{"Edit Profile", "Update Billing Information", "View Menu", "Place Order", "Logout"};
+		String[] buttonNames = new String[]{"Edit Profile", "Change Password", "Update Billing Information", "View Menu", "Place Order", "Logout"};
 		List<Button> buttons = new ArrayList<Button>();
 		Button button = null;
 		for (String buttonName : buttonNames) {
@@ -111,26 +115,62 @@ public class CustomerMainView extends HorizontalLayout implements View{
 		}
 		
 		//add icons and functionality to buttons
-		buttons.get(0).setIcon(VaadinIcons.USER);
-		buttons.get(1).setIcon(VaadinIcons.CREDIT_CARD);
-		buttons.get(2).setIcon(VaadinIcons.MENU);
-		buttons.get(3).setIcon(VaadinIcons.PACKAGE);
-		buttons.get(4).setIcon(VaadinIcons.SIGN_OUT);
+		Button editProfileButton = buttons.get(0);
+		editProfileButton.setIcon(VaadinIcons.USER);
+		editProfileButton.addClickListener(new Button.ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				navigator.navigateTo("CustomerEditProfileView");
+				((CustomerEditProfileView) navigator.getCurrentView()).setCustomer(customer);
+				((CustomerEditProfileView) navigator.getCurrentView()).displayInitialContent();
+			}
+		});
+
+		Button changePasswordButton = buttons.get(1);
+		changePasswordButton.setIcon(VaadinIcons.PASSWORD);
+		changePasswordButton.addClickListener(new Button.ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				navigator.navigateTo("CustomerChangePasswordView");
+				((CustomerChangePasswordView) navigator.getCurrentView()).setCustomer(customer);
+			}
+		});
+		
+		Button updateBillingButton = buttons.get(2);
+		updateBillingButton.setIcon(VaadinIcons.CREDIT_CARD);
+		updateBillingButton.addClickListener(new Button.ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				navigator.navigateTo("CustomerEditBillingView");
+				((CustomerEditBillingView) navigator.getCurrentView()).setCustomer(customer);
+				((CustomerEditBillingView) navigator.getCurrentView()).updateContent();
+			}
+		});
+		
+		Button viewMenuButton = buttons.get(3);
+		viewMenuButton.setIcon(VaadinIcons.SPOON);
+		viewMenuButton.addClickListener(new Button.ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				navigator.navigateTo("CustomerMenuView");
+				((CustomerMenuView) navigator.getCurrentView()).setCustomer(customer);
+			}
+		});
 		
 		//add labels and buttons
-		menuItemsLayout.addComponent(labels.get(0));
-		menuItemsLayout.addComponent(buttons.get(0));
-		menuItemsLayout.addComponent(buttons.get(1));
+		menuItemsLayout.addComponents(labels.get(0), editProfileButton, changePasswordButton, updateBillingButton);
 		
-		menuItemsLayout.addComponent(labels.get(1));
-		menuItemsLayout.addComponent(buttons.get(2));
-		menuItemsLayout.addComponent(buttons.get(3));
+		menuItemsLayout.addComponents(labels.get(1), viewMenuButton);
 		
 		//add logout button at bottom of the page
 		VerticalLayout vLayout2 = new VerticalLayout(); //layout that contains the logout button
 		vLayout2.setMargin(new MarginInfo(true, true, true, false));
 		vLayout2.setHeight("50%");
-		Button signoutButton = buttons.get(4);
+		Button signoutButton = buttons.get(5);
 		signoutButton.addClickListener(new Button.ClickListener(){
 
 			@Override
@@ -148,6 +188,76 @@ public class CustomerMainView extends HorizontalLayout implements View{
 		//add menu to menuArea
 		menuItemsLayout.addStyleName(ValoTheme.MENU_PART);
 		menuArea.addComponent(menuItemsLayout);
+	}
+	
+	public void displayInitialContent() {
+		contentArea.removeAllComponents();
+		Label headerLabel = new Label("Welcome " + customer.getName());
+		headerLabel.addStyleNames(ValoTheme.LABEL_BOLD, ValoTheme.LABEL_H2);
+		contentArea.addComponent(headerLabel);
+		
+		Panel profilePanel = new Panel("Personal Information");
+		VerticalLayout profileLayout = new VerticalLayout();
+		profileLayout.setSpacing(false);
+		
+		Label profileHeaderLabel = new Label("Personal Information");
+		profileHeaderLabel.addStyleNames(ValoTheme.LABEL_H3, ValoTheme.LABEL_BOLD);
+		//profileLayout.addComponent(profileHeaderLabel);
+		
+		//first row will display name on left and email on right
+		Label nameLabel = new Label("Name");
+		nameLabel.setWidth("50%");
+		nameLabel.addStyleNames(ValoTheme.LABEL_BOLD, ValoTheme.LABEL_H4);
+		
+		Label emailLabel = new Label("Email");
+		emailLabel.setWidth("50%");
+		emailLabel.addStyleNames(ValoTheme.LABEL_BOLD, ValoTheme.LABEL_H4);
+		
+		HorizontalLayout firstLayout = new HorizontalLayout();
+		firstLayout.setMargin(false);
+		firstLayout.setWidth("100%");
+		firstLayout.addComponents(nameLabel, emailLabel);
+		
+		HorizontalLayout secondLayout = new HorizontalLayout();
+		secondLayout.setMargin(false);
+		secondLayout.setWidth("100%");
+		secondLayout.addComponents(new Label(customer.getName()), new Label(customer.getEmail()));
+
+		//second row will display birthday on left and phone number on right
+		Label birthdayLabel = new Label("Birth date");
+		birthdayLabel.setWidth("50%");
+		birthdayLabel.addStyleNames(ValoTheme.LABEL_BOLD, ValoTheme.LABEL_H4);
+
+		Label phoneLabel = new Label("Phone number");
+		phoneLabel.setWidth("50%");
+		phoneLabel.addStyleNames(ValoTheme.LABEL_BOLD, ValoTheme.LABEL_H4);
+
+		HorizontalLayout thirdLayout = new HorizontalLayout();
+		thirdLayout.setMargin(false);
+		thirdLayout.setWidth("100%");
+		thirdLayout.addComponents(birthdayLabel, phoneLabel);
+		
+		HorizontalLayout fourthLayout = new HorizontalLayout();
+		fourthLayout.setMargin(false);
+		fourthLayout.setWidth("100%");
+		fourthLayout.addComponents(new Label(customer.getBirthday()), new Label(customer.getPhoneNumber()));
+	
+		profileLayout.addComponents(firstLayout, secondLayout, thirdLayout, fourthLayout);
+		profilePanel.setContent(profileLayout);
+		profilePanel.setWidth("100%");
+		contentArea.addComponent(profilePanel);
+	}
+	
+	public VerticalLayout getContent() {
+		return contentArea;
+	}
+	
+	public Customer getCustomer(){
+		return customer;
+	}
+	
+	public RestaurantDAO getRestaurantDAO() {
+		return restaurantDAO;
 	}
 	
 	//Set the customer and repaint the label

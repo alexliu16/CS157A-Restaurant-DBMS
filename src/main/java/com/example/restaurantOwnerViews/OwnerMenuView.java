@@ -3,6 +3,7 @@ package com.example.restaurantOwnerViews;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.restaurantDBMS.Employee;
+import com.example.restaurantDBMS.MenuItem;
 import com.example.restaurantDBMS.RestaurantDAO;
 import com.vaadin.data.Binder;
 import com.vaadin.data.Binder.Binding;
@@ -12,34 +13,31 @@ import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Grid.ItemClick;
 import com.vaadin.ui.components.grid.EditorSaveEvent;
 import com.vaadin.ui.components.grid.EditorSaveListener;
 import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.components.grid.ItemClickListener;
 import com.vaadin.ui.renderers.ButtonRenderer;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.ItemClick;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class AllEmployeesView extends RestaurantOwnerMainView{
+public class OwnerMenuView extends RestaurantOwnerMainView {
 	
 	@Autowired
 	private RestaurantDAO restaurantDAO;
 	
-	private Grid<Employee> grid;
-	private Employee selectedEmployee;
+	private Grid<MenuItem> grid;
 
-	public AllEmployeesView(Navigator navigate, RestaurantDAO rDAO) {
+	public OwnerMenuView(Navigator navigate, RestaurantDAO rDAO) {
 		super(navigate, rDAO);
-		
 		//initialize globals
-		grid = new Grid<>(Employee.class);
+		grid = new Grid<>(MenuItem.class);
 		restaurantDAO = rDAO;
-		selectedEmployee = null;
-		
+
 		setupContent();
 	}
 	
@@ -58,8 +56,8 @@ public class AllEmployeesView extends RestaurantOwnerMainView{
 		//set up grid
 		grid.setSizeFull();
 		grid.setDescription("Double click on a row to edit.");
-		grid.setColumns("name", "position", "salary", "username", "id", "birthday", "email", "phoneNumber", "password");
-		grid.setItems(restaurantDAO.getAllEmployees());
+		grid.setColumns("name", "description", "type", "price");
+		grid.setItems(restaurantDAO.getAllMenuItems());
 		
 		//Create header row to place filters
 		HeaderRow filterRow = grid.appendHeaderRow();
@@ -69,7 +67,7 @@ public class AllEmployeesView extends RestaurantOwnerMainView{
 		int numCols = grid.getColumns().size();
 		for(int i = 0; i < numCols; i++) {
 			//grid.getColumns().get(i).setMinimumWidth(200);
-			grid.getColumns().get(i).setMinimumWidth(200);
+			grid.getColumns().get(i).setMinimumWidthFromContent(true);
 			grid.getColumns().get(i).setStyleGenerator(item -> "v-align-center");
 		}	
 	
@@ -80,10 +78,10 @@ public class AllEmployeesView extends RestaurantOwnerMainView{
 		grid.getEditor().setEnabled(true);
 		
 		//only allow owner to edit position and salary
-		TextField positionField = new TextField();
-		grid.getColumn("position").setEditorComponent(positionField);
+		/*TextField nameField = new TextField();
+		grid.getColumn("name").setEditorComponent(positionField);
 		TextField salaryField = new TextField();
-		Binder<Employee> binder = grid.getEditor().getBinder();
+		Binder<MenuItem> binder = grid.getEditor().getBinder();
 		Binding<Employee, Integer> binding = binder.forField(salaryField).withValidator(salary -> salary.matches("[0-9,]+"), "Salary is not a valid number").withConverter(new StringToIntegerConverter("New Salary")).bind(Employee::getSalary, Employee::setSalary);
 		grid.getColumn("salary").setEditorBinding(binding);
 	
@@ -113,7 +111,7 @@ public class AllEmployeesView extends RestaurantOwnerMainView{
 			restaurantDAO.deleteEmployee(clickEvent.getItem().getUsername()); //delete employee information 
 			grid.setItems(restaurantDAO.getAllEmployees());
 			grid.getDataProvider().refreshAll();
-		}));
+		}));*/
 		
 		layout.addComponent(grid);
 	}
@@ -135,21 +133,16 @@ public class AllEmployeesView extends RestaurantOwnerMainView{
 
 			@Override
 			public void valueChange(ValueChangeEvent<String> event) {
-				ListDataProvider<Employee> dataProvider = (ListDataProvider<Employee>) grid.getDataProvider();
-				if(colName.equals("name"))
+				ListDataProvider<MenuItem> dataProvider = (ListDataProvider<MenuItem>) grid.getDataProvider();
+				/*if(colName.equals("name"))
 					dataProvider.setFilter(Employee::getName, name -> name.toLowerCase().contains((String)event.getValue().toLowerCase()));
 				else
-					dataProvider.setFilter(Employee::getPosition, job -> job.toLowerCase().contains((String)event.getValue().toLowerCase()));
+					dataProvider.setFilter(Employee::getPosition, job -> job.toLowerCase().contains((String)event.getValue().toLowerCase()));*/
 			}
 		 
 		 });
 		 
 		 return filter;
-	}
-	
-	public void update(){
-		grid.setItems(restaurantDAO.getAllEmployees());
-		grid.getDataProvider().refreshAll();
 	}
 
 }

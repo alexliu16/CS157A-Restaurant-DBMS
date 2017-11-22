@@ -88,10 +88,12 @@ public class LoginView extends VerticalLayout implements View{
         			else if ((user = restaurantDAO.searchEmployee(username)) != null && user.getPassword().equals(password)){ //user is regular employee
         				navigator.navigateTo("EmployeeMainView");
         				((EmployeeMainView) navigator.getCurrentView()).setEmployee((Employee)user);
+        				((EmployeeMainView) navigator.getCurrentView()).displayInitialContent();;
         			}	
         			else if((user = restaurantDAO.searchCustomer(username)) != null && user.getPassword().equals(password)) { //user is customer
         				navigator.navigateTo("CustomerMainView");
         				((CustomerMainView) navigator.getCurrentView()).setCustomer((Customer)user);
+        				((CustomerMainView) navigator.getCurrentView()).displayInitialContent();
         			}	
         			else //no user with given username/password
         				Notification.show("Invalid username/pasword");

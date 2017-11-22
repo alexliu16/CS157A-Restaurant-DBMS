@@ -19,6 +19,8 @@ public class RestaurantDAO {
 	public RestaurantDAO() {
 		jdbcTemplate = new JdbcTemplate();
 	}
+	
+	//-------------------------------------Query-------------------------------------------------------------//
 
 	//Returns a list of all the users in the database
 	public List<User> getAllUsers() {
@@ -45,25 +47,20 @@ public class RestaurantDAO {
 		return DataAccessUtils.singleResult(jdbcTemplate.query("SELECT * FROM Users NATURAL JOIN Employees WHERE username = '" + username + "'", new EmployeeRowMapper()));
 	}
 	
-	//Returns an Employee with the position 'Owner' - null if username doesn't match
 	public Employee searchRestaurantOwner(String username) {
 		return DataAccessUtils.singleResult(jdbcTemplate.query("SELECT * FROM Users NATURAL JOIN Employees WHERE position = 'Owner' AND username = '" + username + "'", new EmployeeRowMapper()));
 	}
 	
-	//Returns an Employee with the position 'Owner' - null if username doesn't match
-	public List<Customer> getAllCustomers(String username) {
-		return jdbcTemplate.query("SELECT a.username, c.password, c.id, c.name, c.birthday, c.email, c.phoneNumber, b.CreditCardNumber, b.ExpirationDate, b.CVV "
-				+ "FROM Customers a JOIN CustomerCreditCards b on a.CreditCardNumber = b.CreditCardNumber "
-				+ "JOIN Users c on a.username = c.username "
-				+ "WHERE a.username = '" + username + "'", new CustomerRowMapper());
+	public Customer searchCustomer(String username) {
+		return DataAccessUtils.singleResult(jdbcTemplate.query("SELECT * FROM Users NATURAL JOIN Customers NATURAL JOIN CustomerCreditCards WHERE username = '" + username + "'", new CustomerRowMapper()));
 	}
 	
-	//Returns an Employee with the position 'Owner' - null if username doesn't match
-	public Customer searchCustomer(String username) {
-		return DataAccessUtils.singleResult(jdbcTemplate.query("SELECT a.username, c.password, c.id, c.name, c.birthday, c.email, c.phoneNumber, b.CreditCardNumber, b.ExpirationDate, b.CVV "
-				+ "FROM Customers a JOIN CustomerCreditCards b on a.CreditCardNumber = b.CreditCardNumber "
-				+ "JOIN Users c on a.username = c.username "
-				+ "WHERE a.username = '" + username + "'", new CustomerRowMapper()));
+	public List<Customer> getAllCustomers() {
+		return jdbcTemplate.query("SELECT * FROM Users NATURAL JOIN Customers NATURAL JOIN CustomerCreditCards", new CustomerRowMapper());
+	}
+	
+	public List<MenuItem> getAllMenuItems() {
+		return jdbcTemplate.query("SELECT * FROM MenuItems", new MenuItemRowMapper());
 	}
 	
 	public void addCustomer(Customer cust) {
@@ -84,7 +81,7 @@ public class RestaurantDAO {
 		return jdbcTemplate.queryForObject("SELECT MAX(id) FROM Users", Integer.class);
 	}
 	
-	//update
+	//---------------------------Modification-----------------------------------------------------------------
 	
 	public void updatePassword(String username, String newPassword) {
 		jdbcTemplate.update("UPDATE Users SET password = ? WHERE username = ?", newPassword, username);
@@ -102,7 +99,14 @@ public class RestaurantDAO {
 		jdbcTemplate.update("UPDATE Employees SET salary = ? WHERE username = ? ", salary, username);
 	}
 	
-	//deletion
+	public void updateCustomerCC(String username, long oldCCNo, long newCCNo, String expDate, int cvv){
+		jdbcTemplate.update("UPDATE Customers SET CreditCardNumber = ? WHERE username = ?", newCCNo, username);
+		jdbcTemplate.update("UPDATE CustomerCreditCards SET CreditCardNumber = ?, ExpirationDate = ?, CVV = ? WHERE CreditCardNumber = ?", 
+				newCCNo, expDate, cvv, oldCCNo);
+		
+	}
+	
+	//---------------------------Deletion-----------------------------------------------------//
 	
 	public void deleteUser(String username){
 		jdbcTemplate.update("DELETE FROM Users WHERE username = ?", username);
@@ -113,7 +117,7 @@ public class RestaurantDAO {
 		jdbcTemplate.update("DELETE FROM Employees WHERE username = ?", username); //delete employee info
 	}
 	
-	//Inner classes:
+	//----------------------Inner Classes----------------------------------------------------//
 	
 	private class UserRowMapper implements RowMapper<User>{
 		
@@ -137,8 +141,16 @@ public class RestaurantDAO {
 		
 		 @Override  
 		    public Customer mapRow(ResultSet rs, int rownumber) throws SQLException {  
-		        return new Customer(rs.getString(1), rs.getString(2), rs.getInt(3),
-		        		rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getLong(8), rs.getString(9), rs.getInt(10));
+		        return new Customer(rs.getString(2), rs.getString(3), rs.getInt(4),
+		        		rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getLong(1), rs.getString(9), rs.getInt(10));
+		    }  
+	}
+	
+	private class MenuItemRowMapper implements RowMapper<MenuItem>{
+		
+		 @Override  
+		    public MenuItem mapRow(ResultSet rs, int rownumber) throws SQLException {  
+		        return new MenuItem(rs.getString(1), rs.getString(2), rs.getString(3), rs.getFloat(4));
 		    }  
 	}
 

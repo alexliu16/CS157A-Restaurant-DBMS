@@ -1,7 +1,6 @@
-package com.example.restaurantOwnerViews;
+package com.example.employeeViews;
 
-import com.example.restaurantDBMS.*;
-import com.vaadin.data.Binder;
+import com.example.restaurantDBMS.RestaurantDAO;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -10,19 +9,18 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class OwnerChangePasswordView extends RestaurantOwnerMainView{
-
-	public OwnerChangePasswordView(Navigator navigate, RestaurantDAO dao) {
+public class EmployeeChangePasswordView extends EmployeeMainView {
+	
+	public EmployeeChangePasswordView(Navigator navigate, RestaurantDAO dao) {
 		super(navigate, dao);
 		setupContent();
 	}
 	
-	public void setupContent() {
+	private void setupContent() {
 		VerticalLayout content = getContent();
 		content.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 		
@@ -36,7 +34,6 @@ public class OwnerChangePasswordView extends RestaurantOwnerMainView{
 		VerticalLayout panelContent = new VerticalLayout();
 		panelContent.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 		FormLayout form = new FormLayout();
-		form.setMargin(true);
 		PasswordField currentPasswordField = new PasswordField("Current Password");
 		PasswordField newPasswordField = new PasswordField("New Password");
 		PasswordField confirmPasswordField = new PasswordField("Retype Password");
