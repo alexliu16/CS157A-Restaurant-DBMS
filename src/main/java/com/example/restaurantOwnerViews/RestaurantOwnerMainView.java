@@ -139,7 +139,16 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 			}
 		});
 		
-		buttons.get(2).setIcon(VaadinIcons.MENU);
+		Button menuButton = buttons.get(2);
+		menuButton.setIcon(VaadinIcons.MENU);
+		menuButton.addClickListener(new Button.ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				navigator.navigateTo("OwnerMenuView");
+				((OwnerMenuView)navigator.getCurrentView()).setEmployee(employee);
+			}
+		});
 		
 		buttons.get(3).setIcon(VaadinIcons.USERS);
 		buttons.get(3).addClickListener(new Button.ClickListener() {
@@ -163,6 +172,8 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 				((HireEmployeeView)navigator.getCurrentView()).displayInitialContent();
 			}
 		});
+		
+	
 		
 		//add labels and buttons
 		menuItemsLayout.addComponents(labels.get(0), editProfileButton, changePasswordButton);

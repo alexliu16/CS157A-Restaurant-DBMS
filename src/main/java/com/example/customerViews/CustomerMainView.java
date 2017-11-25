@@ -161,10 +161,21 @@ public class CustomerMainView extends HorizontalLayout implements View{
 			}
 		});
 		
+		Button placeOrderButton = buttons.get(4);
+		placeOrderButton.setIcon(VaadinIcons.PACKAGE);
+		placeOrderButton.addClickListener(new Button.ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				navigator.navigateTo("CustomerPlaceOrderView");
+				((CustomerPlaceOrderView) navigator.getCurrentView()).setCustomer(customer);
+			}
+		});
+		
 		//add labels and buttons
 		menuItemsLayout.addComponents(labels.get(0), editProfileButton, changePasswordButton, updateBillingButton);
 		
-		menuItemsLayout.addComponents(labels.get(1), viewMenuButton);
+		menuItemsLayout.addComponents(labels.get(1), viewMenuButton, placeOrderButton);
 		
 		//add logout button at bottom of the page
 		VerticalLayout vLayout2 = new VerticalLayout(); //layout that contains the logout button
@@ -254,6 +265,10 @@ public class CustomerMainView extends HorizontalLayout implements View{
 	
 	public Customer getCustomer(){
 		return customer;
+	}
+	
+	public Navigator getNavigator() {
+		return navigator;
 	}
 	
 	public RestaurantDAO getRestaurantDAO() {

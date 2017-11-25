@@ -46,6 +46,8 @@ public class MainUI extends UI {
 		navigator.addView("CustomerChangePasswordView", new CustomerChangePasswordView(navigator, restaurantDAO));
 		navigator.addView("CustomerEditBillingView", new CustomerEditBillingView(navigator, restaurantDAO));
 		navigator.addView("CustomerMenuView", new CustomerMenuView(navigator, restaurantDAO));
+		navigator.addView("CustomerPlaceOrderView", new CustomerPlaceOrderView(navigator, restaurantDAO));
+		navigator.addView("CustomerConfirmOrderView", new CustomerConfirmOrderView(navigator, restaurantDAO));
 		
 		//Employee views
 		navigator.addView("EmployeeMainView", new EmployeeMainView(navigator, restaurantDAO));
@@ -58,6 +60,7 @@ public class MainUI extends UI {
 		navigator.addView("OwnerChangePasswordView", new OwnerChangePasswordView(navigator, restaurantDAO));
 		navigator.addView("AllEmployeesView", new AllEmployeesView(navigator, restaurantDAO));
 		navigator.addView("HireEmployeeView", new HireEmployeeView(navigator, restaurantDAO));
+		navigator.addView("OwnerMenuView", new OwnerMenuView(navigator, restaurantDAO));
 		
 		//Display initial view
 		navigator.navigateTo("LoginView");

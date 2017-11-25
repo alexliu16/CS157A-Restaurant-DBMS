@@ -63,6 +63,29 @@ public class RestaurantDAO {
 		return jdbcTemplate.query("SELECT * FROM MenuItems", new MenuItemRowMapper());
 	}
 	
+	//--------------------------------------------Insertion-------------------------------------------------
+	
+	public void addMenuItem(MenuItem item) {
+		jdbcTemplate.update("INSERT INTO MenuItems Values (?, ?, ?, ?)", item.getName(), item.getType(), item.getDescription(), item.getPrice());
+	}
+	
+	public void addOrder(Order order) {
+		jdbcTemplate.update("INSERT INTO Orders Values (?, ?)", order.getOrderID(), order.getTimeOfOrder());
+	}
+	
+	public void addOrderItem(Order order, MenuItem item, int quantity) {
+		jdbcTemplate.update("INSERT INTO Contain Values (?, ?, ?)", order.getOrderID(), item.getName(), quantity);
+	}
+	
+	public void addTakeoutOrder(Order order, Address addr) {
+		jdbcTemplate.update("INSERT INTO TakeoutOrders Values (?, ?, ?, ?, ?)", 
+				order.getOrderID(), addr.getStreet(), addr.getCity(), addr.getState(), addr.getZip()); 
+	}
+	
+	public void addOrderToCustomer(Customer cust, Order order) {
+		jdbcTemplate.update("INSERT INTO Place Values (?, ?)", cust.getUsername(), order.getOrderID());
+	}
+	
 	public void addCustomer(Customer cust) {
 		jdbcTemplate.update("INSERT INTO CustomerCreditCards VALUES (?, ?, ?)", new Object[]
 			{cust.getCreditCardNumber(), cust.getExpirationDate(), cust.getCvv()});
@@ -78,7 +101,14 @@ public class RestaurantDAO {
 	}
 	
 	public int getMaxID(){
-		return jdbcTemplate.queryForObject("SELECT MAX(id) FROM Users", Integer.class);
+		Integer maxID = jdbcTemplate.queryForObject("SELECT MAX(id) FROM Users", Integer.class);
+		return Optional.ofNullable(maxID).orElse(1);
+	}
+	
+	//Return the highest max order id + 1
+	public int getMaxOrderID() {
+		Integer maxOrderID = jdbcTemplate.queryForObject("SELECT MAX(order_id) FROM Orders", Integer.class);
+		return Optional.ofNullable(maxOrderID).orElse(0);
 	}
 	
 	//---------------------------Modification-----------------------------------------------------------------
@@ -106,6 +136,11 @@ public class RestaurantDAO {
 		
 	}
 	
+	public void updateMenuItem(MenuItem newItem, String oldItemName) {
+		jdbcTemplate.update("UPDATE MenuItems SET Name = ?, Type = ?, Description = ?, Price = ? WHERE Name = ?",
+				newItem.getName(), newItem.getType(), newItem.getDescription(), newItem.getPrice(), oldItemName); 
+	}
+	
 	//---------------------------Deletion-----------------------------------------------------//
 	
 	public void deleteUser(String username){
@@ -115,6 +150,10 @@ public class RestaurantDAO {
 	public void deleteEmployee(String username){
 		jdbcTemplate.update("DELETE FROM Users WHERE username = ?", username); //delete user info
 		jdbcTemplate.update("DELETE FROM Employees WHERE username = ?", username); //delete employee info
+	}
+	
+	public void deleteMenuItem(String itemName) {
+		jdbcTemplate.update("DELETE FROM MenuItems WHERE Name = ?", itemName);
 	}
 	
 	//----------------------Inner Classes----------------------------------------------------//

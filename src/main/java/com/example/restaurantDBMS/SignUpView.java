@@ -11,6 +11,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
@@ -86,7 +87,7 @@ public class SignUpView extends VerticalLayout implements View {
 		passwordLabel.setStyleName(ValoTheme.LABEL_BOLD);
 		layout.addComponent(passwordLabel);
 		
-		TextField passwordField = new TextField();
+		PasswordField passwordField = new PasswordField();
 		passwordField.setWidth("100%");
 		layout.addComponent(passwordField);
 		
