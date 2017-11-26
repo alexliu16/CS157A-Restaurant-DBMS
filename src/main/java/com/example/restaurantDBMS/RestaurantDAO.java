@@ -63,6 +63,23 @@ public class RestaurantDAO {
 		return jdbcTemplate.query("SELECT * FROM MenuItems", new MenuItemRowMapper());
 	}
 	
+	public List<DineinOrder> getEmployeeOrders(Employee emp) {
+		return jdbcTemplate.query("SELECT order_id, table_number, time_of_order, status FROM"
+				+ "(SELECT * FROM DineinOrders NATURAL JOIN Orders NATURAL JOIN Manage WHERE employee_username = '" + emp.getUsername() + "') AS S", new DineinOrderRowMapper());
+	}
+	
+	public TreeMap<MenuItem, Integer> getOrderItems(Order order){
+		TreeMap<MenuItem, Integer> items = new TreeMap<>();
+		//Get list of MenuItems in the order
+		List<MenuItem> listOrderItems = jdbcTemplate.query("SELECT name, type, description, price FROM MenuItems NATURAL JOIN" + 
+				"(SELECT order_id, item_name AS name FROM Contain WHERE order_id = '" + order.getOrderID() + "'" + ") as S", new MenuItemRowMapper());
+		for(MenuItem item: listOrderItems) {
+			int quantity = jdbcTemplate.queryForObject("SELECT quantity FROM Contain WHERE item_name = '" + item.getName() + "'", Integer.class);
+			items.put(item, quantity);
+		}
+		return items;
+	}
+	
 	//--------------------------------------------Insertion-------------------------------------------------
 	
 	public void addMenuItem(MenuItem item) {
@@ -70,7 +87,7 @@ public class RestaurantDAO {
 	}
 	
 	public void addOrder(Order order) {
-		jdbcTemplate.update("INSERT INTO Orders Values (?, ?)", order.getOrderID(), order.getTimeOfOrder());
+		jdbcTemplate.update("INSERT INTO Orders Values (?, ?, ?)", order.getOrderID(), order.getTimeOfOrder(), order.getOrderStatus());
 	}
 	
 	public void addOrderItem(Order order, MenuItem item, int quantity) {
@@ -82,8 +99,16 @@ public class RestaurantDAO {
 				order.getOrderID(), addr.getStreet(), addr.getCity(), addr.getState(), addr.getZip()); 
 	}
 	
+	public void addDineinOrder(Order order, int tableNum) {
+		jdbcTemplate.update("INSERT INTO DineinOrders Values (?, ?)", order.getOrderID(), tableNum);
+	}
+	
 	public void addOrderToCustomer(Customer cust, Order order) {
 		jdbcTemplate.update("INSERT INTO Place Values (?, ?)", cust.getUsername(), order.getOrderID());
+	}
+	
+	public void addOrderToEmployee(Employee emp, Order order) {
+		jdbcTemplate.update("INSERT INTO Manage Values (?, ?)", emp.getUsername(), order.getOrderID());
 	}
 	
 	public void addCustomer(Customer cust) {
@@ -141,6 +166,10 @@ public class RestaurantDAO {
 				newItem.getName(), newItem.getType(), newItem.getDescription(), newItem.getPrice(), oldItemName); 
 	}
 	
+	public void updateOrderStatus(Order order, String status) {
+		jdbcTemplate.update("UPDATE Orders SET status = ? WHERE order_id = ?", status, order.getOrderID());
+	}
+	
 	//---------------------------Deletion-----------------------------------------------------//
 	
 	public void deleteUser(String username){
@@ -154,6 +183,11 @@ public class RestaurantDAO {
 	
 	public void deleteMenuItem(String itemName) {
 		jdbcTemplate.update("DELETE FROM MenuItems WHERE Name = ?", itemName);
+	}
+	
+	//Delete all items from an order with the given ID
+	public void deleteOrderItems(Order order) {
+		jdbcTemplate.update("DELETE FROM Contain WHERE order_id = ?", order.getOrderID());
 	}
 	
 	//----------------------Inner Classes----------------------------------------------------//
@@ -190,6 +224,14 @@ public class RestaurantDAO {
 		 @Override  
 		    public MenuItem mapRow(ResultSet rs, int rownumber) throws SQLException {  
 		        return new MenuItem(rs.getString(1), rs.getString(2), rs.getString(3), rs.getFloat(4));
+		    }  
+	}
+	
+	private class DineinOrderRowMapper implements RowMapper<DineinOrder>{
+		
+		 @Override  
+		    public DineinOrder mapRow(ResultSet rs, int rownumber) throws SQLException {  
+		        return new DineinOrder(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4));
 		    }  
 	}
 

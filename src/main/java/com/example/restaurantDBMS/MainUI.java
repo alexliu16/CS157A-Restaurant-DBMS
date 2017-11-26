@@ -53,6 +53,9 @@ public class MainUI extends UI {
 		navigator.addView("EmployeeMainView", new EmployeeMainView(navigator, restaurantDAO));
 		navigator.addView("EmployeeEditProfileView", new EmployeeEditProfileView(navigator, restaurantDAO));
 		navigator.addView("EmployeeChangePasswordView", new EmployeeChangePasswordView(navigator, restaurantDAO));
+		navigator.addView("EmployeePlaceOrderView", new EmployeePlaceOrderView(navigator, restaurantDAO));
+		navigator.addView("EmployeeOrdersView", new EmployeeOrdersView(navigator, restaurantDAO));
+		navigator.addView("SingleOrderView", new SingleOrderView(navigator, restaurantDAO));
 		
 		//Restaurant owner views
 		navigator.addView("RestaurantOwnerMainView", new RestaurantOwnerMainView(navigator, restaurantDAO));

@@ -132,7 +132,7 @@ public class CustomerConfirmOrderView extends CustomerMainView {
 	
 	private void createOrder(){
 		RestaurantDAO dao = getRestaurantDAO();
-		Order order = new Order(dao.getMaxOrderID() + 1, UI.getCurrent().getPage().getWebBrowser().getCurrentDate().toString());
+		Order order = new Order(dao.getMaxOrderID() + 1, UI.getCurrent().getPage().getWebBrowser().getCurrentDate().toString(), "Incomplete");
 
 		//update MySQL
 		dao.addOrder(order); //Update "Orders" table

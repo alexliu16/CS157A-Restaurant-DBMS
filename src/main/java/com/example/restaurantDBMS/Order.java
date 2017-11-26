@@ -4,10 +4,12 @@ public class Order {
 	
 	private int orderID;
 	private String timeOfOrder;
+	private String orderStatus;
 	
-	public Order(int id, String time) {
+	public Order(int id, String time, String status) {
 		orderID = id;
 		timeOfOrder = time;
+		orderStatus = status;
 	}
 	
 	public int getOrderID() {
@@ -24,5 +26,13 @@ public class Order {
 	
 	public void setTimeOfOrder(String time) {
 		timeOfOrder = time;
+	}
+	
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+	
+	public void setOrderStatus(String status) {
+		orderStatus = status;
 	}
 }

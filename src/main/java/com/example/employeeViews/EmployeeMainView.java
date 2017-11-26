@@ -6,10 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.restaurantDBMS.*;
-import com.example.restaurantOwnerViews.AllEmployeesView;
-import com.example.restaurantOwnerViews.HireEmployeeView;
-import com.example.restaurantOwnerViews.OwnerChangePasswordView;
-import com.example.restaurantOwnerViews.OwnerEditProfileView;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
@@ -19,7 +15,6 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
@@ -95,7 +90,7 @@ public class EmployeeMainView extends HorizontalLayout implements View{
 		menuItemsLayout.addComponent(vLayout);
 		
 		//create labels	
-		String[] labelNames = new String[]{"Profile", "Orders", "Menu"};
+		String[] labelNames = new String[]{"Profile", "Orders"};
 		List<Label> labels = new ArrayList<Label>();
 		Label label = null;
 		for (String labelName : labelNames) {
@@ -107,7 +102,7 @@ public class EmployeeMainView extends HorizontalLayout implements View{
 		}
 		
 		//create buttons
-		String[] buttonNames = new String[]{"Edit Profile", "Change Password", "View Orders", "Place Order", "View Menu", "Logout"};
+		String[] buttonNames = new String[]{"Edit Profile", "Change Password", "View Orders", "Place Order", "Logout"};
 		List<Button> buttons = new ArrayList<Button>();
 		Button button = null;
 		for (String buttonName : buttonNames) {
@@ -142,20 +137,38 @@ public class EmployeeMainView extends HorizontalLayout implements View{
 			}
 		});
 
-		//buttons.get(2).setIcon(VaadinIcons.MENU);
+		Button viewOrdersButton = buttons.get(2);
+		viewOrdersButton.setIcon(VaadinIcons.EDIT);
+		viewOrdersButton.addClickListener(new Button.ClickListener() {
 
-		//buttons.get(3).setIcon(VaadinIcons.USERS)
+			@Override
+			public void buttonClick(ClickEvent event) {
+				navigator.navigateTo("EmployeeOrdersView");
+				((EmployeeOrdersView) navigator.getCurrentView()).setEmployee(employee);
+				((EmployeeOrdersView) navigator.getCurrentView()).displayContent();
+			}
+		});
+
+		Button placeOrderButton = buttons.get(3);
+		placeOrderButton.setIcon(VaadinIcons.PACKAGE);
+		placeOrderButton.addClickListener(new Button.ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				navigator.navigateTo("EmployeePlaceOrderView");
+				((EmployeePlaceOrderView) navigator.getCurrentView()).setEmployee(employee);
+			}
+		});
 		
 		//add labels and buttons
 		menuItemsLayout.addComponents(labels.get(0), editProfileButton, changePasswordButton);
-		menuItemsLayout.addComponents(labels.get(1), buttons.get(2), buttons.get(3));
-		menuItemsLayout.addComponents(labels.get(2), buttons.get(4));
+		menuItemsLayout.addComponents(labels.get(1), viewOrdersButton, placeOrderButton);
 		
 		//add logout button at bottom of the page
 		VerticalLayout vLayout2 = new VerticalLayout(); //layout that contains the logout button
 		vLayout2.setMargin(new MarginInfo(true, true, true, false));
 		vLayout2.setHeight("30%");
-		Button signoutButton = buttons.get(5);
+		Button signoutButton = buttons.get(4);
 		signoutButton.addClickListener(new Button.ClickListener(){
 
 			@Override
@@ -269,6 +282,10 @@ public class EmployeeMainView extends HorizontalLayout implements View{
 	
 	public RestaurantDAO getRestaurantDAO() {
 		return restaurantDAO;
+	}
+	
+	public Navigator getNavigator() {
+		return navigator;
 	}
 	
 	//Set the customer and repaint the label
