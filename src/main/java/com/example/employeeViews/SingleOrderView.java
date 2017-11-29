@@ -38,7 +38,7 @@ public class SingleOrderView extends VerticalLayout implements View {
 	private Panel orderPanel; //panel that displays the current order for the customer
 	
 	//classes to handle customer order
-	private DineinOrder currentOrder;
+	private Order currentOrder;
 	private TreeMap<MenuItem, Integer> orderItems; //map of menu items to the quantity ordered in customer's order
 	private VerticalLayout itemsLayout; //layout that displays the current items in the customer's order
 	private Label headerLabel;
@@ -70,7 +70,10 @@ public class SingleOrderView extends VerticalLayout implements View {
 	
 	void displayContent(){
 		//update header
-		headerLabel.setValue("Table " + currentOrder.getTableNumber() + " Order:");
+		if(currentOrder instanceof DineinOrder)
+			headerLabel.setValue("Table " + ((DineinOrder) currentOrder).getTableNumber() + " Order:");
+		else if(currentOrder instanceof TakeoutOrder)
+			headerLabel.setValue("Online Order " + currentOrder.getOrderID() + " Order:");
 		//update order panel
 		orderItems = restaurantDAO.getOrderItems(currentOrder);
 		updateOrder();
@@ -217,6 +220,7 @@ public class SingleOrderView extends VerticalLayout implements View {
 				if(checkBox.getValue()) { //order is complete
 					currentOrder.setOrderStatus("Completed");
 					restaurantDAO.updateOrderStatus(currentOrder, "Completed");
+					checkBox.setValue(false);
 				}
 				restaurantDAO.deleteOrderItems(currentOrder); 
 				for(MenuItem item: orderItems.keySet())
@@ -227,9 +231,6 @@ public class SingleOrderView extends VerticalLayout implements View {
 			}
 		});
 		buttonLayout.addComponents(backButton, confirmButton);
-		
-		
-		
 		
 		panelContent.addComponents(itemsLayout, subtotalLayout, taxLayout, totalLayout, buttonLayout, checkBox);
 		panelContent.setComponentAlignment(buttonLayout, Alignment.MIDDLE_CENTER);
@@ -336,7 +337,7 @@ public class SingleOrderView extends VerticalLayout implements View {
 		return layout;
 	}
 	
-	public void setOrder(DineinOrder order) {
+	public void setOrder(Order order) {
 		currentOrder = order;
 	}
 	

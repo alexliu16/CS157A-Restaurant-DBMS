@@ -19,6 +19,11 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * View that is displayed for the customer to fill in his billing information
+ * @author alexliu
+ *
+ */
 public class BillingInformationView extends VerticalLayout implements View {
 
 	@Autowired
@@ -39,7 +44,6 @@ public class BillingInformationView extends VerticalLayout implements View {
 		
 		//set up layout
 	  	setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-		
 	    setupForm();
 	    setupPanel();
 	}
@@ -93,8 +97,10 @@ public class BillingInformationView extends VerticalLayout implements View {
 					restaurantDAO.addCustomer(customer);
 					
 					//change view
+					binder.readBean(null);
 					navigator.navigateTo("CustomerMainView");
 					((CustomerMainView)navigator.getCurrentView()).setCustomer(customer);
+					((CustomerMainView)navigator.getCurrentView()).displayInitialContent();
 				}	
 				else
 					Notification.show("Not all fields are filled out correctly");
@@ -110,6 +116,7 @@ public class BillingInformationView extends VerticalLayout implements View {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
+				binder.readBean(null);
 				navigator.navigateTo("LoginView");
 			}
 		});

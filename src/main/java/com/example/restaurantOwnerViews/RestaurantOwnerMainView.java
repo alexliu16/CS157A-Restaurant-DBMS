@@ -105,7 +105,7 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 		}
 		
 		//create buttons
-		String[] buttonNames = new String[]{"Edit Profile", "Change Password", "View Menu", "View Employee Information", "Hire New Employee", "Logout"};
+		String[] buttonNames = new String[]{"View Profile", "Edit Profile", "Change Password", "View Menu", "View Employee Information", "Hire New Employee", "Logout"};
 		List<Button> buttons = new ArrayList<Button>();
 		Button button = null;
 		for (String buttonName : buttonNames) {
@@ -116,7 +116,17 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 		}
 		
 		//add icons and functionality to buttons
-		Button editProfileButton = buttons.get(0);
+		Button viewProfileButton = buttons.get(0);
+		viewProfileButton.setIcon(VaadinIcons.USER);
+		viewProfileButton.addClickListener(new Button.ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				navigator.navigateTo("RestaurantOwnerMainView");
+			}
+		});
+		
+		Button editProfileButton = buttons.get(1);
 		editProfileButton.setIcon(VaadinIcons.USER);
 		editProfileButton.addClickListener(new Button.ClickListener() {
 			
@@ -128,7 +138,7 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 			}
 		});
 		
-		Button changePasswordButton = buttons.get(1);
+		Button changePasswordButton = buttons.get(2);
 		changePasswordButton.setIcon(VaadinIcons.PASSWORD);
 		changePasswordButton.addClickListener(new Button.ClickListener() {
 			
@@ -139,7 +149,7 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 			}
 		});
 		
-		Button menuButton = buttons.get(2);
+		Button menuButton = buttons.get(3);
 		menuButton.setIcon(VaadinIcons.MENU);
 		menuButton.addClickListener(new Button.ClickListener() {
 			
@@ -150,8 +160,9 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 			}
 		});
 		
-		buttons.get(3).setIcon(VaadinIcons.USERS);
-		buttons.get(3).addClickListener(new Button.ClickListener() {
+		Button employeesButton = buttons.get(4);
+		employeesButton.setIcon(VaadinIcons.USERS);
+		employeesButton.addClickListener(new Button.ClickListener() {
 			
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -161,7 +172,7 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 			}
 		});
 		
-		Button hireButton = buttons.get(4);
+		Button hireButton = buttons.get(5);
 		hireButton.setIcon(VaadinIcons.PLUS);
 		hireButton.addClickListener(new Button.ClickListener() {
 			
@@ -176,15 +187,15 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 	
 		
 		//add labels and buttons
-		menuItemsLayout.addComponents(labels.get(0), editProfileButton, changePasswordButton);
-		menuItemsLayout.addComponents(labels.get(1), buttons.get(2));
-		menuItemsLayout.addComponents(labels.get(2), buttons.get(3), hireButton);
+		menuItemsLayout.addComponents(labels.get(0), viewProfileButton, editProfileButton, changePasswordButton);
+		menuItemsLayout.addComponents(labels.get(1), menuButton);
+		menuItemsLayout.addComponents(labels.get(2), employeesButton, hireButton);
 		
 		//add logout button at bottom of the page
 		VerticalLayout vLayout2 = new VerticalLayout(); //layout that contains the logout button
 		vLayout2.setMargin(new MarginInfo(true, true, true, false));
 		//vLayout2.setHeight("0%");
-		Button signoutButton = buttons.get(5);
+		Button signoutButton = buttons.get(6);
 		signoutButton.setIcon(VaadinIcons.SIGN_OUT);
 		signoutButton.addClickListener(new Button.ClickListener(){
 

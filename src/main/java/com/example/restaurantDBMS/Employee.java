@@ -1,5 +1,10 @@
 package com.example.restaurantDBMS;
 
+/**
+ * Represents an employee that works at the restaurant
+ * @author alexliu
+ *
+ */
 public class Employee extends User{
 	private String position;
 	private int salary;

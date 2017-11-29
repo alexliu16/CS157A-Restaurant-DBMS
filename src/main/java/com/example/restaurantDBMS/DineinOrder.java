@@ -1,5 +1,10 @@
 package com.example.restaurantDBMS;
 
+/**
+ * Represents an order placed by an employee for a table at the restaurant
+ * @author alexliu
+ *
+ */
 public class DineinOrder extends Order {
 	
 	private int tableNumber;

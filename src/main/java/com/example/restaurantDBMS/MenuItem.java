@@ -1,5 +1,10 @@
 package com.example.restaurantDBMS;
 
+/**
+ * An item on the restaurant's menu
+ * @author alexliu
+ *
+ */
 public class MenuItem implements Comparable<MenuItem> {
 
 	private String name;

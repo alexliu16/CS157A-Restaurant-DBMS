@@ -1,5 +1,10 @@
 package com.example.restaurantDBMS;
 
+/**
+ * Represents an address - has a street, city, state and zip code
+ * @author alexliu
+ *
+ */
 public class Address {
 
 	private String street;

@@ -62,7 +62,6 @@ public class LoginView extends VerticalLayout implements View{
 		
 		//add username field
         TextField usernameField = new TextField("Username");
-      
         usernameField.setIcon(VaadinIcons.USER);
         form.addComponent(usernameField);
         
@@ -95,8 +94,17 @@ public class LoginView extends VerticalLayout implements View{
         				((CustomerMainView) navigator.getCurrentView()).setCustomer((Customer)user);
         				((CustomerMainView) navigator.getCurrentView()).displayInitialContent();
         			}	
-        			else //no user with given username/password
+        			else { //no user with given username/password
+        				user = null;
         				Notification.show("Invalid username/pasword");
+        			}	
+        			
+        			//reset fields
+        			if(user != null) {
+        				usernameField.setValue("");
+        				passwordField.setValue("");
+        			}
+        				
         		}
         	});
         loginButton.addStyleName(ValoTheme.BUTTON_PRIMARY);

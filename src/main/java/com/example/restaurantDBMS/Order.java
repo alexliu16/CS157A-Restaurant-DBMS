@@ -1,5 +1,10 @@
 package com.example.restaurantDBMS;
 
+/**
+ * Either a dine-in order placed for a table at the restaurant or a take-out order placed online by a customer
+ * @author alexliu
+ *
+ */
 public class Order {
 	
 	private int orderID;

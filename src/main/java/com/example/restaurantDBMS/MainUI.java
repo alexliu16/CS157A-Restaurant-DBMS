@@ -10,30 +10,25 @@ import com.vaadin.ui.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 /**
  * Main user interface for the Restaurant DBMS
  * @author alexliu
- *
  */
 
 @SpringUI
 public class MainUI extends UI {
 
 	@Autowired
-	private RestaurantDAO restaurantDAO;
+	private RestaurantDAO restaurantDAO; //DAO to MySQL database
 	
-	private Navigator navigator;
-	//private VerticalLayout layout;
+	private Navigator navigator; //navigator to navigate between the views
 
 	@Override
 	protected void init(VaadinRequest request) {
 		//Create a navigator to control the views
 		navigator = new Navigator(this, this);
 		
-		/*Create and register the views: 
-		 * Pass in DAO and navigator to each view
-		*/
+		//Create and register the views: 
 		
 		//Login/Signup Views
 		navigator.addView("LoginView", new LoginView(navigator, restaurantDAO));

@@ -1,5 +1,10 @@
 package com.example.restaurantDBMS;
 
+/**
+ * An online order that is placed by a customer
+ * @author alexliu
+ *
+ */
 public class TakeoutOrder extends Order {
 	
 	private String street;

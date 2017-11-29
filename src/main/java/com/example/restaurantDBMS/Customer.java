@@ -1,8 +1,12 @@
 package com.example.restaurantDBMS;
 
+/**
+ * Customer of the restaurant - has billing information
+ * @author alexliu
+ *
+ */
 public class Customer extends User {
-
-
+	
 	private long creditCardNumber;
 	private String expirationDate;
 	private int cvv;
@@ -50,15 +54,5 @@ public class Customer extends User {
 
 	public void setCvv(int cvv) {
 		this.cvv = cvv;
-	}
-
-	@Override
-	public String toString() {
-		return "Customer [creditCardNumber=" + creditCardNumber + ", expirationDate=" + expirationDate + ", cvv=" + cvv
-				+ ", getUsername()=" + getUsername() + ", getPassword()=" + getPassword() + ", getId()=" + getId()
-				+ ", getName()=" + getName() + ", getBirthday()=" + getBirthday() + ", getEmail()=" + getEmail()
-				+ ", getPhoneNumber()=" + getPhoneNumber() + ", toString()=" + super.toString() + ", getClass()="
-				+ getClass() + ", hashCode()=" + hashCode() + "]";
-	}
-	
+	}	
 }

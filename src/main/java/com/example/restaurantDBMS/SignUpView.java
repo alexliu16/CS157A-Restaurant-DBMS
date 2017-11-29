@@ -42,7 +42,6 @@ public class SignUpView extends VerticalLayout implements View {
 		
 		//set up layout
 	  	setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-		
 	    setupForm();
 	    setupButtons();
 	    setupPanel();
@@ -140,7 +139,6 @@ public class SignUpView extends VerticalLayout implements View {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				if(binder.validate().isOk()) { //All fields are filled in and formatted correctly
-					binder.setBean(customer);
 					customer.setId(restaurantDAO.getMaxID() + 1);
 					navigator.navigateTo("BillingInformationView");
 					((BillingInformationView) navigator.getCurrentView()).setCustomer(customer);
@@ -161,6 +159,7 @@ public class SignUpView extends VerticalLayout implements View {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
+				binder.readBean(null);
 				navigator.navigateTo("LoginView");
 			}
 		});

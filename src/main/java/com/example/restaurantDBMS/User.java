@@ -1,12 +1,17 @@
 package com.example.restaurantDBMS;
 
+/**
+ * A user of the Restaurant DBMS - either an employee or a customer
+ * @author alexliu
+ *
+ */
 public class User {
 	
-	private String username,
+	private String username, 
 	password;
 	private int id;
-	private String name,
-	birthday,
+	private String name, 
+	birthday, 
 	email,
 	phoneNumber;
 	
@@ -84,11 +89,5 @@ public class User {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
-	}
-
-	@Override
-	public String toString() {
-		return "User [username=" + username + ", password=" + password + ", id=" + id + ", name=" + name + ", birthday="
-				+ birthday + ", email=" + email + ", phoneNumber=" + phoneNumber + "]";
 	}
 }
