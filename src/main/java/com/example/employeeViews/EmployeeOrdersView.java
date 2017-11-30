@@ -16,6 +16,12 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * View that is displayed when employee view orders 
+ * The employee is able to see the dine in orders that he himself places, as well as all online orders.
+ * @author alexliu
+ *
+ */
 public class EmployeeOrdersView extends EmployeeMainView {
 	
 	private Panel containerPanel; //panel to hold panels

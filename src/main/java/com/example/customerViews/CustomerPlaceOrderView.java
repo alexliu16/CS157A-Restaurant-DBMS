@@ -25,6 +25,11 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * View that is displayed when the customer adds menu items to his/her order
+ * @author alexliu
+ *
+ */
 public class CustomerPlaceOrderView extends CustomerMainView {
 	
 	private MenuWindow window; //window that is displayed when selecting menu items

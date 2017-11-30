@@ -85,7 +85,8 @@ public class RestaurantDAO {
 		List<MenuItem> listOrderItems = jdbcTemplate.query("SELECT name, type, description, price FROM MenuItems NATURAL JOIN" + 
 				"(SELECT order_id, item_name AS name FROM OrderContains WHERE order_id = '" + order.getOrderID() + "'" + ") as S", new MenuItemRowMapper());
 		for(MenuItem item: listOrderItems) {
-			int quantity = jdbcTemplate.queryForObject("SELECT quantity FROM OrderContains WHERE item_name = '" + item.getName() + "'", Integer.class);
+			int quantity = jdbcTemplate.queryForObject("SELECT quantity FROM OrderContains WHERE item_name = '" + item.getName() + "'"
+					+ "AND order_id = '" + order.getOrderID() + "'", Integer.class);
 			items.put(item, quantity);
 		}
 		return items;
@@ -139,9 +140,8 @@ public class RestaurantDAO {
 	}
 	
 	//Creates a new takeout order
-	public void addTakeoutOrder(Order order, Address addr) {
-		jdbcTemplate.update("INSERT INTO TakeoutOrders Values (?, ?, ?, ?, ?)", 
-				order.getOrderID(), addr.getStreet(), addr.getCity(), addr.getState(), addr.getZip()); 
+	public void addTakeoutOrder(TakeoutOrder order) {
+		jdbcTemplate.update("INSERT INTO TakeoutOrders Values (?, ?, ?)", order.getOrderID(), order.getStreet(), order.getCity()); 
 	}
 	
 	//Creates a new dine-in order 
@@ -276,7 +276,7 @@ public class RestaurantDAO {
 		
 		 @Override  
 		    public TakeoutOrder mapRow(ResultSet rs, int rownumber) throws SQLException {  
-		        return new TakeoutOrder(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(3));
+		        return new TakeoutOrder(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(3));
 		    }  
 	}
 

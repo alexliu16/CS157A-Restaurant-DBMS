@@ -32,7 +32,7 @@ public class OwnerEditProfileView extends RestaurantOwnerMainView{
 		layout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 		
 		Label headerLabel = new Label("My User Profile");
-		headerLabel.addStyleNames(ValoTheme.LABEL_H1, ValoTheme.LABEL_BOLD);
+		headerLabel.addStyleNames(ValoTheme.LABEL_H1);
 		layout.addComponent(headerLabel);
 		
 		VerticalLayout contentLayout = new VerticalLayout();

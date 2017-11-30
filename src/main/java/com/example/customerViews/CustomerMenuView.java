@@ -14,6 +14,11 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * View that is displayed when the customer wants to view the menu
+ * @author alexliu
+ *
+ */
 public class CustomerMenuView extends CustomerMainView{
 
 	public CustomerMenuView(Navigator navigate, RestaurantDAO rDAO) {

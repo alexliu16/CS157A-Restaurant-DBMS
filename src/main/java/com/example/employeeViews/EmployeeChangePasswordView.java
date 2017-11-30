@@ -13,6 +13,11 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * View when employee wants to change their password
+ * @author alexliu
+ *
+ */
 public class EmployeeChangePasswordView extends EmployeeMainView {
 	
 	public EmployeeChangePasswordView(Navigator navigate, RestaurantDAO dao) {

@@ -13,6 +13,11 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * The view that is displayed when a customer wants to change their password
+ * @author alexliu
+ *
+ */
 public class CustomerChangePasswordView extends CustomerMainView {
 
 	public CustomerChangePasswordView(Navigator navigate, RestaurantDAO rDAO) {

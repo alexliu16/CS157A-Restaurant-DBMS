@@ -28,6 +28,11 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * View that is displayed when an employee wants to manage an order
+ * @author alexliu
+ *
+ */
 public class SingleOrderView extends VerticalLayout implements View {
 	
 	@Autowired

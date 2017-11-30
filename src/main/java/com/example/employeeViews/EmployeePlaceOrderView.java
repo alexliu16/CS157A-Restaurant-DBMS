@@ -28,6 +28,11 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * View that is displayed when the employee places an order for a table
+ * @author alexliu
+ *
+ */
 public class EmployeePlaceOrderView extends EmployeeMainView{
 	
 	private MenuWindow window; //window that is displayed when selecting menu items
@@ -204,6 +209,7 @@ public class EmployeePlaceOrderView extends EmployeeMainView{
 					//add order to MySQL
 					createOrder();
 					//reset order
+					tableField.setValue("");
 					Notification.show("You have successfully placed an order");
 					orderItems = new TreeMap<>();
 					updateOrder();

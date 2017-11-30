@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.example.customerViews.CustomerMainView;
 import com.example.restaurantDBMS.*;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
@@ -120,11 +121,12 @@ public class EmployeeMainView extends HorizontalLayout implements View{
 			@Override
 			public void buttonClick(ClickEvent event) {
 				navigator.navigateTo("EmployeeMainView");
+				((EmployeeMainView) navigator.getCurrentView()).displayInitialContent();
 			}
 		});
 		
 		Button editProfileButton = buttons.get(1);
-		editProfileButton.setIcon(VaadinIcons.USER);
+		editProfileButton.setIcon(VaadinIcons.PENCIL);
 		editProfileButton.addClickListener(new Button.ClickListener() {
 
 			@Override
@@ -176,8 +178,9 @@ public class EmployeeMainView extends HorizontalLayout implements View{
 		//add logout button at bottom of the page
 		VerticalLayout vLayout2 = new VerticalLayout(); //layout that contains the logout button
 		vLayout2.setMargin(new MarginInfo(true, true, true, false));
-		vLayout2.setHeight("30%");
+		vLayout2.setHeight("50%");
 		Button signoutButton = buttons.get(5);
+		signoutButton.setIcon(VaadinIcons.SIGN_OUT);
 		signoutButton.addClickListener(new Button.ClickListener(){
 
 			@Override

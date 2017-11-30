@@ -20,18 +20,24 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * The view that is displayed before a customer places an order 
+ * View will display a form to fill out address information
+ * @author alexliu
+ *
+ */
 public class CustomerConfirmOrderView extends CustomerMainView {
 	
-	private Address address;
-	private Binder<Address> binder;
+	private TakeoutOrder order;
+	private Binder<TakeoutOrder> binder;
 	private TreeMap<MenuItem, Integer> orderItems;
 
 	public CustomerConfirmOrderView(Navigator navigate, RestaurantDAO rDAO) {
 		super(navigate, rDAO);
 		orderItems = new TreeMap<>();
 		binder = new Binder<>();
-		address = new Address();
-		binder.setBean(address);
+		order = new TakeoutOrder();
+		binder.setBean(order);
 		
 		initializeContent();
 	}
@@ -66,29 +72,11 @@ public class CustomerConfirmOrderView extends CustomerMainView {
 		TextField cityField = new TextField();
 		cityField.setWidth("100%");
 		panelContent.addComponents(cityLabel, cityField);
-
-		Label stateLabel = new Label("State");
-		stateLabel.addStyleName(ValoTheme.LABEL_BOLD);
-		TextField stateField = new TextField();
-		stateField.setWidth("100%");
-		panelContent.addComponents(stateLabel, stateField);
-
-		Label zipLabel = new Label("Zip");
-		zipLabel.addStyleName(ValoTheme.LABEL_BOLD);
-		TextField zipField = new TextField();
-		zipField.setWidth("100%");
-		panelContent.addComponents(zipLabel, zipField);
 		
 		//Bind fields and add validation
-		binder.forField(addressField).withValidator(addr -> addr.length() > 0, "This field cannot be left blank.").bind(Address::getStreet, Address::setStreet);
-		binder.forField(cityField).withValidator(city -> city.matches("[a-zA-Z]+(\\s+[a-zA-Z]+)*"), "City is of incorrect format").bind(Address::getCity, Address::setCity);
-		binder.forField(stateField).withValidator(state -> state.matches("[a-zA-Z]+(\\s+[a-zA-Z]+)*"), "State is of incorrect format")
-				.bind(Address::getState, Address::setState);
-		binder.forField(zipField).withValidator(zip -> zip.matches("\\d{5}"),
-				"Phone number is of incorrect format").withConverter(new StringToIntegerConverter("")).bind(Address::getZip, Address::setZip);
-		
-		zipField.setValue("");
-		
+		binder.forField(addressField).withValidator(addr -> addr.length() > 0, "This field cannot be left blank.").bind(TakeoutOrder::getStreet, TakeoutOrder::setStreet);
+		binder.forField(cityField).withValidator(city -> city.matches("[a-zA-Z]+(\\s+[a-zA-Z]+)*"), "City is of incorrect format").bind(TakeoutOrder::getCity, TakeoutOrder::setCity);
+
 		//Add button layout
 		HorizontalLayout buttonLayout = new HorizontalLayout();
 		buttonLayout.setWidthUndefined();
@@ -115,7 +103,8 @@ public class CustomerConfirmOrderView extends CustomerMainView {
 					getNavigator().navigateTo("CustomerMainView");
 					//reset fields
 					binder.readBean(null);
-					address = new Address();
+					order = new TakeoutOrder();
+					binder.setBean(order);
 				}
 				else
 					Notification.show("Not all fields are filled out correctly");
@@ -127,20 +116,20 @@ public class CustomerConfirmOrderView extends CustomerMainView {
 		
 		orderPanel.setContent(panelContent);
 		content.addComponent(orderPanel);
-		
 	}
 	
 	private void createOrder(){
 		RestaurantDAO dao = getRestaurantDAO();
-		Order order = new Order(dao.getMaxOrderID() + 1, UI.getCurrent().getPage().getWebBrowser().getCurrentDate().toString(), "Incomplete");
-
+		order.setOrderID(dao.getMaxOrderID() + 1);
+		order.setTimeOfOrder(UI.getCurrent().getPage().getWebBrowser().getCurrentDate().toString());
+		order.setOrderStatus("Incomplete");
+		
 		//update MySQL
 		dao.addOrder(order); //Update "Orders" table
-		dao.addTakeoutOrder(order, address); //Update "TakeoutOrders" table
+		dao.addTakeoutOrder(order); //Update "TakeoutOrders" table
 		dao.addOrderToCustomer(getCustomer(), order); //Update "Place" table
 		for(MenuItem item: orderItems.keySet())
 			dao.addOrderItem(order, item, orderItems.get(item)); //Update "Contain" table
-		
 	}
 	
 	public void setOrderItems(TreeMap<MenuItem, Integer> items) {

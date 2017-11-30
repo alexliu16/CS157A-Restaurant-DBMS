@@ -27,6 +27,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * The view that is displayed when a customer first logs in 
+ * This view is also displayed when a customer clicks "View Profile"
  * @author alexliu
  *
  */
@@ -122,11 +123,12 @@ public class CustomerMainView extends HorizontalLayout implements View{
 			@Override
 			public void buttonClick(ClickEvent event) {
 				navigator.navigateTo("CustomerMainView");
+				((CustomerMainView) navigator.getCurrentView()).displayInitialContent();
 			}
 		});
 		
 		Button editProfileButton = buttons.get(1);
-		editProfileButton.setIcon(VaadinIcons.USER);
+		editProfileButton.setIcon(VaadinIcons.PENCIL);
 		editProfileButton.addClickListener(new Button.ClickListener() {
 
 			@Override
@@ -192,6 +194,7 @@ public class CustomerMainView extends HorizontalLayout implements View{
 		vLayout2.setMargin(new MarginInfo(true, true, true, false));
 		vLayout2.setHeight("50%");
 		Button signoutButton = buttons.get(6);
+		signoutButton.setIcon(VaadinIcons.SIGN_OUT);
 		signoutButton.addClickListener(new Button.ClickListener(){
 
 			@Override
