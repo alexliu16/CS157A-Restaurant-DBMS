@@ -227,9 +227,7 @@ public class SingleOrderView extends VerticalLayout implements View {
 					restaurantDAO.updateOrderStatus(currentOrder, "Completed");
 					checkBox.setValue(false);
 				}
-				restaurantDAO.deleteOrderItems(currentOrder); 
-				for(MenuItem item: orderItems.keySet())
-					restaurantDAO.addOrderItem(currentOrder, item, orderItems.get(item)); //Update "Contain" table
+				restaurantDAO.updateOrderItems(currentOrder, orderItems);
 				orderItems = new TreeMap<>();
 				navigator.navigateTo("EmployeeOrdersView");
 				((EmployeeOrdersView)navigator.getCurrentView()).displayContent();

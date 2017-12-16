@@ -125,11 +125,7 @@ public class CustomerConfirmOrderView extends CustomerMainView {
 		order.setOrderStatus("Incomplete");
 		
 		//update MySQL
-		dao.addOrder(order); //Update "Orders" table
-		dao.addTakeoutOrder(order); //Update "TakeoutOrders" table
-		dao.addOrderToCustomer(getCustomer(), order); //Update "Place" table
-		for(MenuItem item: orderItems.keySet())
-			dao.addOrderItem(order, item, orderItems.get(item)); //Update "Contain" table
+		dao.addTakeoutOrder(order, orderItems, getCustomer()); 
 	}
 	
 	public void setOrderItems(TreeMap<MenuItem, Integer> items) {

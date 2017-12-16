@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.example.employeeViews.EmployeeMainView;
 import com.example.restaurantDBMS.Employee;
 import com.example.restaurantDBMS.RestaurantDAO;
 import com.vaadin.icons.VaadinIcons;
@@ -123,11 +124,12 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 			@Override
 			public void buttonClick(ClickEvent event) {
 				navigator.navigateTo("RestaurantOwnerMainView");
+				((RestaurantOwnerMainView) navigator.getCurrentView()).displayInitialContent();
 			}
 		});
 		
 		Button editProfileButton = buttons.get(1);
-		editProfileButton.setIcon(VaadinIcons.USER);
+		editProfileButton.setIcon(VaadinIcons.PENCIL);
 		editProfileButton.addClickListener(new Button.ClickListener() {
 			
 			@Override
@@ -184,8 +186,6 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 			}
 		});
 		
-	
-		
 		//add labels and buttons
 		menuItemsLayout.addComponents(labels.get(0), viewProfileButton, editProfileButton, changePasswordButton);
 		menuItemsLayout.addComponents(labels.get(1), menuButton);
@@ -194,7 +194,7 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 		//add logout button at bottom of the page
 		VerticalLayout vLayout2 = new VerticalLayout(); //layout that contains the logout button
 		vLayout2.setMargin(new MarginInfo(true, true, true, false));
-		//vLayout2.setHeight("0%");
+		vLayout2.setHeight("40%");
 		Button signoutButton = buttons.get(6);
 		signoutButton.setIcon(VaadinIcons.SIGN_OUT);
 		signoutButton.addClickListener(new Button.ClickListener(){
@@ -228,7 +228,6 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 		
 		Label profileHeaderLabel = new Label("Personal Information");
 		profileHeaderLabel.addStyleNames(ValoTheme.LABEL_H3, ValoTheme.LABEL_BOLD);
-		//profileLayout.addComponent(profileHeaderLabel);
 		
 		//first row will display name on left and email on right
 		Label nameLabel = new Label("Name");
@@ -278,7 +277,6 @@ public class RestaurantOwnerMainView extends HorizontalLayout implements View{
 		
 		Label jobHeaderLabel = new Label("Job Information");
 		jobHeaderLabel.addStyleNames(ValoTheme.LABEL_H3, ValoTheme.LABEL_BOLD);
-		//jobLayout.addComponent(jobHeaderLabel);
 		
 		HorizontalLayout labelRow = new HorizontalLayout();
 		labelRow.setWidth("100%");

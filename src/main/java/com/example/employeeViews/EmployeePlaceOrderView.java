@@ -68,6 +68,7 @@ public class EmployeePlaceOrderView extends EmployeeMainView{
 	
 	private void setupContent() {
 		VerticalLayout content = getContent();
+		content.removeAllComponents();
 		content.setHeight("100%");
 		content.setMargin(false);
 		
@@ -227,11 +228,7 @@ public class EmployeePlaceOrderView extends EmployeeMainView{
 		Order order = new Order(dao.getMaxOrderID() + 1, UI.getCurrent().getPage().getWebBrowser().getCurrentDate().toString(), "Incomplete");
 
 		//update MySQL
-		dao.addOrder(order); //Update "Orders" table
-		dao.addDineinOrder(order, Integer.parseInt(tableField.getValue())); //Update "DineinOrders" table
-		dao.addOrderToEmployee(getEmployee(), order); //Update "Manage" table
-		for(MenuItem item: orderItems.keySet())
-			dao.addOrderItem(order, item, orderItems.get(item)); //Update "Contain" table
+		dao.addDineinOrder(order, orderItems, Integer.parseInt(tableField.getValue()), getEmployee());
 	}
 	
 	private List<MenuItem> getMenuItemsOfType(List<MenuItem> items, String type) {
@@ -330,6 +327,10 @@ public class EmployeePlaceOrderView extends EmployeeMainView{
 	
 		layout.addComponents(hLayout, descriptionLabel);
 		return layout;
+	}
+	
+	public void redraw() {
+		initializeMenuPanel();
 	}
 	
 	private class MenuWindow extends Window{

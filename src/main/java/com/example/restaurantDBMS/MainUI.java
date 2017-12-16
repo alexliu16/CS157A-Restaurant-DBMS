@@ -63,5 +63,14 @@ public class MainUI extends UI {
 		//Display initial view
 		navigator.navigateTo("LoginView");
 	}
-
+	
+	public void updateMenuViews() {
+		navigator.navigateTo("CustomerMenuView");
+		((CustomerMenuView)navigator.getCurrentView()).redraw();
+		navigator.navigateTo("CustomerPlaceOrderView");
+		((CustomerPlaceOrderView)navigator.getCurrentView()).redraw();
+		navigator.navigateTo("EmployeePlaceOrderView");
+		((EmployeePlaceOrderView)navigator.getCurrentView()).redraw();
+		navigator.navigateTo("OwnerMenuView");
+	}
 }

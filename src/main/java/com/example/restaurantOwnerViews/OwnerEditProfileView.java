@@ -14,6 +14,11 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * View that is displayed when owner wants to edit personal information
+ * @author alexliu
+ *
+ */
 public class OwnerEditProfileView extends RestaurantOwnerMainView{
 	
 	private Binder<Employee> binder;
@@ -77,7 +82,7 @@ public class OwnerEditProfileView extends RestaurantOwnerMainView{
 			@Override
 			public void buttonClick(ClickEvent event) {
 				if(binder.validate().isOk()) { //All fields are filled in and formatted correctly
-					getRestaurantDAO().updateEmployeeEmailPhone(currentEmployee.getUsername(), currentEmployee.getEmail(), currentEmployee.getPhoneNumber());
+					getRestaurantDAO().updateUserEmailPhone(currentEmployee.getUsername(), currentEmployee.getEmail(), currentEmployee.getPhoneNumber());
 					Notification.show("You have sucessfully updated your profile.");
 				}	
 				else

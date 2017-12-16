@@ -120,13 +120,21 @@ public class SignUpView extends VerticalLayout implements View {
 		phoneField.setWidth("100%");
 		layout.addComponent(phoneField);	 
 		
-		//bind fields
-		binder.forField(nameField).withValidator(name -> name != null && !name.isEmpty(), "This field cannot be left blank").bind(Customer::getName, Customer::setName);
-		binder.forField(usernameField).withValidator(user -> user != null && !user.isEmpty(), "Please enter a username").withValidator(user -> restaurantDAO.searchUser(user) == null, "Username is already taken").bind(Customer::getUsername, Customer::setUsername);
-		binder.forField(passwordField).withValidator(pass -> pass !=null && !pass.isEmpty(), "Please enter a password").bind(Customer::getPassword, Customer::setPassword);
-		binder.forField(birthdayField).withValidator(birthday -> birthday.toString().matches("\\d{2}-\\d{2}-\\d{4}"), "Please enter a valid date").bind(Customer::getBirthday, Customer::setBirthday);
-		binder.forField(emailField).withValidator(new EmailValidator("Please enter a valid email address")).bind(Customer::getEmail, Customer::setEmail);
-		binder.forField(phoneField).withValidator(phone -> phone.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}"), "Phone number is of incorrect format").bind(Customer::getPhoneNumber, Customer::setPhoneNumber);
+		// bind fields
+		binder.forField(nameField)
+				.withValidator(name -> name != null && !name.isEmpty(), "This field cannot be left blank")
+				.bind(Customer::getName, Customer::setName);
+		binder.forField(usernameField).withValidator(user -> user != null && !user.isEmpty(), "Please enter a username")
+				.withValidator(user -> restaurantDAO.searchUser(user) == null, "Username is already taken")
+				.bind(Customer::getUsername, Customer::setUsername);
+		binder.forField(passwordField).withValidator(pass -> pass != null && !pass.isEmpty(), "Please enter a password")
+				.bind(Customer::getPassword, Customer::setPassword);
+		binder.forField(birthdayField).withValidator(birthday -> birthday.toString().matches("\\d{2}-\\d{2}-\\d{4}"),
+				"Please enter a valid date").bind(Customer::getBirthday, Customer::setBirthday);
+		binder.forField(emailField).withValidator(new EmailValidator("Please enter a valid email address"))
+				.bind(Customer::getEmail, Customer::setEmail);
+		binder.forField(phoneField).withValidator(phone -> phone.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}"),
+				"Phone number is of incorrect format").bind(Customer::getPhoneNumber, Customer::setPhoneNumber);
 		
 		binder.setBean(customer);
 	}

@@ -12,6 +12,11 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * View that is displayed when owner wants to view/edit menu
+ * @author alexliu
+ *
+ */
 public class OwnerMenuView extends RestaurantOwnerMainView {
 	
 	private Binder<MenuItem> binder;
@@ -171,10 +176,13 @@ public class OwnerMenuView extends RestaurantOwnerMainView {
 					//Reset item
 					newItem = new MenuItem("", "", "", 0);
 					binder.readBean(null);
+					binder.setBean(newItem);
 					
 					//Display success notification and update the menu
 					Notification.show("You have successfully added a new menu item");
 					updateMenu();
+					
+					((MainUI)UI.getCurrent()).updateMenuViews();
 				}
 				else 
 					Notification.show("Not all fields are filled out correctly");
@@ -321,6 +329,7 @@ public class OwnerMenuView extends RestaurantOwnerMainView {
 						UI.getCurrent().removeWindow(window);
 						windowBinder.readBean(null);
 						updateMenu();
+						((MainUI)UI.getCurrent()).updateMenuViews();
 					}
 					else
 						Notification.show("Not all fields are filled out correctly");
@@ -338,6 +347,7 @@ public class OwnerMenuView extends RestaurantOwnerMainView {
 					getRestaurantDAO().deleteMenuItem(item.getName());
 					UI.getCurrent().removeWindow(window);
 					updateMenu();
+					((MainUI)UI.getCurrent()).updateMenuViews();
 				}
 				
 			});
@@ -345,7 +355,6 @@ public class OwnerMenuView extends RestaurantOwnerMainView {
 			buttonLayout.addComponents(cancelButton, addButton, deleteButton);
 			
 			content.addComponents(nameLayout, typeLayout, priceLayout, descriptionLabel, descriptionArea, buttonLayout);
-			//content.addComponents(nameLabel, nameField, typeLabel, typeField, priceLabel, priceField, descriptionArea, buttonLayout);
 			content.setComponentAlignment(buttonLayout, Alignment.MIDDLE_CENTER);
 			this.setContent(content);
 		}

@@ -15,6 +15,11 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * View that is displayed when owner wants to change his password
+ * @author alexliu
+ *
+ */
 public class OwnerChangePasswordView extends RestaurantOwnerMainView{
 
 	public OwnerChangePasswordView(Navigator navigate, RestaurantDAO dao) {

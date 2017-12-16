@@ -1,11 +1,15 @@
 package com.example.restaurantOwnerViews;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.restaurantDBMS.*;
 import com.vaadin.data.Binder;
+import com.vaadin.data.BindingValidationStatus;
+import com.vaadin.data.ValidationResult;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.navigator.Navigator;
@@ -15,22 +19,27 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * View that is displayed for restaurant owner to hire a new employee
+ * @author alexliu
+ *
+ */
 public class HireEmployeeView extends RestaurantOwnerMainView {
 
 	@Autowired
 	private RestaurantDAO restaurantDAO;
 
-	private Navigator navigator;
+	private Employee newEmployee;
 	private Binder<Employee> binder;
 
 	public HireEmployeeView(Navigator navigate, RestaurantDAO rDAO) {
 		super(navigate, rDAO);
-		navigator = navigate;
 		restaurantDAO = rDAO;
 		binder = new Binder<>();
 	}
@@ -67,7 +76,7 @@ public class HireEmployeeView extends RestaurantOwnerMainView {
 		Label passwordLabel = new Label("Create a default password");
 		passwordLabel.setStyleName(ValoTheme.LABEL_BOLD);
 
-		TextField passwordField = new TextField();
+		PasswordField passwordField = new PasswordField();
 		passwordField.setWidth("100%");
 		layout.addComponents(usernameLabel, usernameField, passwordLabel, passwordField);
 
@@ -111,7 +120,7 @@ public class HireEmployeeView extends RestaurantOwnerMainView {
 		layout.addComponents(jobLabel, jobLayout);
 
 		// bind fields
-		Employee newEmployee = new Employee("", "", -1, "", "", "", "", "", -1);
+		newEmployee = new Employee("", "", -1, "", "", "", "", "", -1);
 		binder.forField(nameField)
 				.withValidator(name -> name != null && !name.isEmpty(), "This field cannot be left blank")
 				.bind(Employee::getName, Employee::setName);
@@ -140,16 +149,22 @@ public class HireEmployeeView extends RestaurantOwnerMainView {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(binder.validate().isOk()) { //All fields are filled in and formatted correctly
-					binder.setBean(newEmployee);
+				if (!nameField.getValue().isEmpty() && !usernameField.getValue().isEmpty()
+						&& restaurantDAO.searchUser(usernameField.getValue()) == null
+						&& !passwordField.getValue().isEmpty()
+						&& birthdayField.getValue().matches("\\d{2}-\\d{2}-\\d{4}")
+						&& emailField.getValue().matches("^([\\w-\\.]+){1,64}@([\\w&&[^_]]+){2,255}.[a-z]{2,}$")
+						&& !positionField.getValue().isEmpty() && salaryField.getValue().matches("[0-9,]+")) {
 					newEmployee.setId(restaurantDAO.getMaxID() + 1);
 					restaurantDAO.addEmployee(newEmployee);
 					binder.readBean(null);
 					Notification.show("Success! You have hired a new employee.");
-				}	
+					// Reset employee
+					newEmployee = new Employee("", "", 0, "", "", "", "", "", 0);
+					binder.setBean(newEmployee);
+				}
 				else
-					//Notification.show("Not all fields are filled out correctly");
-					Notification.show(Arrays.toString(binder.validate().getValidationErrors().toArray()));
+					Notification.show("Not all fields are filled out correctly");
 			}
 			
 		});

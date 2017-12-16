@@ -65,6 +65,7 @@ public class CustomerPlaceOrderView extends CustomerMainView {
 	
 	private void setupContent() {
 		VerticalLayout content = getContent();
+		content.removeAllComponents();
 		content.setHeight("100%");
 		content.setMargin(false);
 		
@@ -304,6 +305,10 @@ public class CustomerPlaceOrderView extends CustomerMainView {
 	
 		layout.addComponents(hLayout, descriptionLabel);
 		return layout;
+	}
+	
+	public void redraw() {
+		initializeMenuPanel();
 	}
 	
 	private class MenuWindow extends Window{

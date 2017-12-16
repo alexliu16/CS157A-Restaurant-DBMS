@@ -79,25 +79,24 @@ public class LoginView extends VerticalLayout implements View{
         			String password = passwordField.getValue().trim();
         			//Determine the user based on username and password 
         			User user = null;
-        			if((user = restaurantDAO.searchRestaurantOwner(username)) != null && user.getPassword().equals(password)){ //user is restaurant owner
+        			if((user = restaurantDAO.searchRestaurantOwner(username, password)) != null){ //user is restaurant owner
         				navigator.navigateTo("RestaurantOwnerMainView");
         				((RestaurantOwnerMainView) navigator.getCurrentView()).setEmployee((Employee)user);
         				((RestaurantOwnerMainView) navigator.getCurrentView()).displayInitialContent();
         			}	
-        			else if ((user = restaurantDAO.searchEmployee(username)) != null && user.getPassword().equals(password)){ //user is regular employee
+        			else if ((user = restaurantDAO.searchEmployee(username, password)) != null){ //user is regular employee
         				navigator.navigateTo("EmployeeMainView");
         				((EmployeeMainView) navigator.getCurrentView()).setEmployee((Employee)user);
         				((EmployeeMainView) navigator.getCurrentView()).displayInitialContent();;
         			}	
-        			else if((user = restaurantDAO.searchCustomer(username)) != null && user.getPassword().equals(password)) { //user is customer
+        			else if((user = restaurantDAO.searchCustomer(username, password)) != null) { //user is customer
         				navigator.navigateTo("CustomerMainView");
         				((CustomerMainView) navigator.getCurrentView()).setCustomer((Customer)user);
         				((CustomerMainView) navigator.getCurrentView()).displayInitialContent();
         			}	
-        			else { //no user with given username/password
-        				user = null;
+        			else  //no user with given username/password
         				Notification.show("Invalid username/pasword");
-        			}	
+        			
         			
         			//reset fields
         			if(user != null) {

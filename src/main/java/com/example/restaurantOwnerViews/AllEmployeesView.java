@@ -24,6 +24,11 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.ItemClick;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * View that is displayed for owner to view/edit employee information
+ * @author alexliu
+ *
+ */
 public class AllEmployeesView extends RestaurantOwnerMainView{
 	
 	@Autowired
@@ -48,7 +53,6 @@ public class AllEmployeesView extends RestaurantOwnerMainView{
 		layout.removeAllComponents();
 		layout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 		layout.setSpacing(false);
-		//layout.setMargin(false);
 		
 		//set up header
 		Label header = new Label("Current Employees"); 
@@ -68,7 +72,6 @@ public class AllEmployeesView extends RestaurantOwnerMainView{
 		
 		int numCols = grid.getColumns().size();
 		for(int i = 0; i < numCols; i++) {
-			//grid.getColumns().get(i).setMinimumWidth(200);
 			grid.getColumns().get(i).setMinimumWidth(200);
 			grid.getColumns().get(i).setStyleGenerator(item -> "v-align-center");
 		}	
@@ -101,8 +104,7 @@ public class AllEmployeesView extends RestaurantOwnerMainView{
 			@Override
 			public void onEditorSave(EditorSaveEvent<Employee> event) {
 				if(binder.validate().isOk()){
-					restaurantDAO.updateEmployeePosition(selectedEmployee.getUsername(), positionField.getValue());
-					restaurantDAO.updateEmployeeSalary(selectedEmployee.getUsername(), Integer.parseInt(salaryField.getValue().replaceAll(",", "")));
+					restaurantDAO.updateEmployeeInfo(selectedEmployee.getUsername(), positionField.getValue(), Integer.parseInt(salaryField.getValue().replaceAll(",", "")));
 				}	
 			}
 		
@@ -121,7 +123,7 @@ public class AllEmployeesView extends RestaurantOwnerMainView{
 	private TextField createTextFilter(String colName){
 		 TextField filter = new TextField();
 		 filter.setHeight("30px");
-		 filter.setWidth("80px");
+		 filter.setWidth("150px");
 		 if(colName.equals("name")) {
 			 filter.setPlaceholder("Filter by name");
 			 filter.setDescription("Search employees by name");

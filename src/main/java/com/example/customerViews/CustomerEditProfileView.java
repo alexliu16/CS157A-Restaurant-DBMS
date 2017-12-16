@@ -80,7 +80,7 @@ public class CustomerEditProfileView extends CustomerMainView {
 			public void buttonClick(ClickEvent event) {
 				if (binder.validate().isOk()) { // All fields are filled in and formatted correctly
 					binder.setBean(currentCustomer);
-					getRestaurantDAO().updateEmployeeEmailPhone(currentCustomer.getUsername(),
+					getRestaurantDAO().updateUserEmailPhone(currentCustomer.getUsername(),
 							currentCustomer.getEmail(), currentCustomer.getPhoneNumber());
 					Notification.show("You have sucessfully updated your profile.");
 				} else

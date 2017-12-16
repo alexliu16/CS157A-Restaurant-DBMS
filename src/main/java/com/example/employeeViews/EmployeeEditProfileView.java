@@ -84,7 +84,7 @@ private Binder<Employee> binder;
 			public void buttonClick(ClickEvent event) {
 				if(binder.validate().isOk()) { //All fields are filled in and formatted correctly
 					binder.setBean(currentEmployee);
-					getRestaurantDAO().updateEmployeeEmailPhone(currentEmployee.getUsername(), currentEmployee.getEmail(), currentEmployee.getPhoneNumber());
+					getRestaurantDAO().updateUserEmailPhone(currentEmployee.getUsername(), currentEmployee.getEmail(), currentEmployee.getPhoneNumber());
 					Notification.show("You have sucessfully updated your profile.");
 				}	
 				else

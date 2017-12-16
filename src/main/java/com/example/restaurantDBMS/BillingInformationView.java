@@ -93,7 +93,6 @@ public class BillingInformationView extends VerticalLayout implements View {
 					customer.setCvv(Integer.parseInt(cvvField.getValue()));
 					
 					//add information to database
-					restaurantDAO.addUser(customer);
 					restaurantDAO.addCustomer(customer);
 					
 					//change view

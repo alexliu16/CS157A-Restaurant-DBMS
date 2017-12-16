@@ -28,6 +28,7 @@ public class CustomerMenuView extends CustomerMainView{
 	
 	private void setupContent() {
 		VerticalLayout content = getContent();
+		content.removeAllComponents();
 		content.setHeight("100%");
 		content.setMargin(false);
 		
@@ -143,6 +144,8 @@ public class CustomerMenuView extends CustomerMainView{
 		layout.addComponents(hLayout, descriptionLabel);
 		return layout;
 	}
-
 	
+	public void redraw() {
+		setupContent();
+	}
 }
